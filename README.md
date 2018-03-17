@@ -17,7 +17,7 @@ A tiny function to curry any function with placeholder support
 
 ## Summary
 
-`curriable` provides a `curry` method that is [highly performant](#benchmarks) with a small footprint (_551 bytes minified+gzipped_). You can also call the method with any combination of parameters (one at a time, all at once, or any number in between), and placeholders are supported.
+`curriable` provides a `curry` method that is [highly performant](#benchmarks) with a small footprint (_551 bytes minified+gzipped_). You can call the method with any combination of parameters (one at a time, all at once, or any number in between), and placeholders are supported.
 
 If `fn` is the curried function, the following are all equivalent:
 
@@ -62,7 +62,7 @@ The `curry` method has the following signature:
 function curry(fn: function, arity: number = fn.length) => function;
 ```
 
-`arity` defaults to be the length provided by `fn.length`, but be aware this default can cause unusual behavior with default parameters or use of rest parameters. [See the documentation on Function.length for more details](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/length).
+`arity` defaults to be the length provided by `fn.length`, but be aware this can cause unusual behavior with default parameters or use of rest parameters. [See the documentation on Function.length for more details](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/length).
 
 #### Rest parameters
 
