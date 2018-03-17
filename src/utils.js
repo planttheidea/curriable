@@ -9,8 +9,8 @@ export const __ = typeof Symbol === 'function' ? Symbol('curriable placeholder')
  * @description
  * get the complete args with previous placeholders being filled in
  *
- * @param {Array<*>} originalArgs the arguments from the previous run
- * @param {Array<*>} nextArgs the arguments from the next run
+ * @param {Arguments} originalArgs the arguments from the previous run
+ * @param {Arguments} nextArgs the arguments from the next run
  * @returns {Array<*>} the complete list of args
  */
 export const getArgs = (originalArgs, nextArgs) => {
@@ -37,7 +37,7 @@ export const getArgs = (originalArgs, nextArgs) => {
  * @description
  * determine if any of the arguments are placeholders
  *
- * @param {Array<*>} args the args passed to the function
+ * @param {Arguments} args the args passed to the function
  * @param {number} arity the arity of the function
  * @returns {boolean} are any of the args placeholders
  */
