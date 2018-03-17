@@ -17,7 +17,20 @@ A tiny function to curry any function with placeholder support
 
 ## Summary
 
-`curriable` provides a `curry` method that allows for placeholder support while still being [highly performant](#benchmarks) with a small footprint (_551 bytes minified+gzipped_).
+`curriable` provides a `curry` method that is [highly performant](#benchmarks) with a small footprint (_551 bytes minified+gzipped_). You can also call the method with any combination of parameters (one at a time, all at once, or any number in between), and placeholders are supported.
+
+If `fn` is the curried function, the following are all equivalent:
+
+* `fn(1)(2)(3)`
+* `fn(1)(2, 3)`
+* `fn(1, 2)(3)`
+* `fn(1, 2, 3)`
+* `fn(_, 2, 3)(1)`
+* `fn(_, _, 3)(1)(2)`
+* `fn(_, _, 3)(1, 2)`
+* `fn(_, 2)(1)(3)`
+* `fn(_, 2)(1, 3)`
+* `fn(_, 2)(_, 3)(1)`
 
 ## Usage
 
