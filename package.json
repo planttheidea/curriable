@@ -12,7 +12,7 @@
   "bugs": {
     "url": "https://github.com/planttheidea/curriable/issues"
   },
-  "description": "A tiny, fast method to convert any method to be curriable",
+  "description": "Convert any method to be curriable with placeholder support",
   "devDependencies": {
     "ava": "^0.25.0",
     "babel-cli": "^6.26.0",

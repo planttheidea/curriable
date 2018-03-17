@@ -1,6 +1,6 @@
 # curriable
 
-A tiny function to curry any function with placeholder support
+Curry any function with placeholder support
 
 ## Table of contents
 
