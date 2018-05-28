@@ -14,21 +14,22 @@ export const __ = typeof Symbol === 'function' ? Symbol('curriable placeholder')
  * @returns {Array<*>} the complete list of args
  */
 export const getArgs = (originalArgs, nextArgs) => {
-  let argsToPass = new Array(originalArgs.length),
-      nextArgsIndex = 0;
+  const args = new Array(originalArgs.length);
+
+  let nextArgsIndex = 0;
 
   for (let index = 0; index < originalArgs.length; index++) {
-    argsToPass[index] =
+    args[index] =
       originalArgs[index] === __ && nextArgsIndex < nextArgs.length ? nextArgs[nextArgsIndex++] : originalArgs[index];
   }
 
   if (nextArgsIndex < nextArgs.length) {
     for (; nextArgsIndex < nextArgs.length; nextArgsIndex++) {
-      argsToPass.push(nextArgs[nextArgsIndex]);
+      args.push(nextArgs[nextArgsIndex]);
     }
   }
 
-  return argsToPass;
+  return args;
 };
 
 /**

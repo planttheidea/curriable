@@ -1,5 +1,17 @@
 {
   "env": {
+    "benchmark": {
+      "presets": [
+        [
+          "env",
+          {
+            "loose": true
+          }
+        ],
+        "stage-2",
+        "minify"
+      ]
+    },
     "development": {
       "presets": [
         [
@@ -44,7 +56,8 @@
             "modules": false
           }
         ],
-        "stage-2"
+        "stage-2",
+        "minify"
       ]
     },
     "test": {
