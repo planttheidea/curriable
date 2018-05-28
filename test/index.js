@@ -18,12 +18,14 @@ test('if all required exports are present', (t) => {
   t.is(curriable.curry.name, 'curry');
   t.true(curriable.curry.hasOwnProperty('__'));
   t.is(curriable.curry.__, curriable.__);
+
+  t.true(curriable.hasOwnProperty('uncurry'));
+  t.is(typeof curriable.uncurry, 'function');
+  t.is(curriable.uncurry.name, 'uncurry');
 });
 
 test('if curry will make a function curriable', (t) => {
-  const method = (a, b) => {
-    return [a, b];
-  };
+  const method = (a, b) => [a, b];
 
   const curriedMethod = curriable.curry(method);
 
@@ -34,7 +36,7 @@ test('if curry will make a function curriable', (t) => {
 
   const curriedResult = curriedMethod(a);
 
-  t.is(typeof curriedMethod, 'function');
+  t.is(typeof curriedResult, 'function');
 
   const result = curriedResult(b);
 
@@ -42,9 +44,7 @@ test('if curry will make a function curriable', (t) => {
 });
 
 test('if curry will make a function curriable based on a custom arity', (t) => {
-  const method = (a, b, ...rest) => {
-    return [a, b, ...rest];
-  };
+  const method = (a, b, ...rest) => [a, b, ...rest];
 
   const curriedMethod = curriable.curry(method, 4);
 
@@ -57,7 +57,7 @@ test('if curry will make a function curriable based on a custom arity', (t) => {
 
   const curriedAResult = curriedMethod(a);
 
-  t.is(typeof curriedMethod, 'function');
+  t.is(typeof curriedAResult, 'function');
 
   const curriedBResult = curriedAResult(b);
 
@@ -70,4 +70,26 @@ test('if curry will make a function curriable based on a custom arity', (t) => {
   const curriedDResult = curriedCResult(d);
 
   t.deepEqual(curriedDResult, [a, b, c, d]);
+});
+
+test('if uncurry will make a curried function uncurried', (t) => {
+  const method = (a, b) => [a, b];
+
+  const curriedMethod = curriable.curry(method);
+  const uncurriedMethod = curriable.uncurry(curriedMethod);
+
+  t.is(typeof uncurriedMethod, 'function');
+
+  const a = 'a';
+  const b = 'b';
+
+  const uncurriedResult = uncurriedMethod(a);
+
+  t.true(Array.isArray(uncurriedResult));
+  t.deepEqual(uncurriedResult, [a, undefined]);
+
+  const otherUncurriedResult = uncurriedMethod(a, b);
+
+  t.true(Array.isArray(otherUncurriedResult));
+  t.deepEqual(otherUncurriedResult, [a, b]);
 });

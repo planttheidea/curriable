@@ -9,6 +9,7 @@ Curry any function with placeholder support
   * [Signature](#signature)
   * [Rest parameters](#rest-parameters)
   * [Default parameters](#default-parameters)
+  * [uncurry](#uncurry)
 * [Benchmarks](#benchmarks)
   * [Passing each parameter in curried calls](#passing-each-parameter-in-curried-calls)
   * [Passing all parameters in one call](#passing-all-parameters-in-one-call)
@@ -17,7 +18,7 @@ Curry any function with placeholder support
 
 ## Summary
 
-`curriable` provides a `curry` method that is [highly performant](#benchmarks) with a small footprint (_551 bytes minified+gzipped_). You can call the method with any combination of parameters (one at a time, all at once, or any number in between), and placeholders are supported.
+`curriable` provides a `curry` method that is [highly performant](#benchmarks) with a small footprint (_578 bytes minified+gzipped_). You can call the method with any combination of parameters (one at a time, all at once, or any number in between), and placeholders are supported.
 
 If `fn` is the curried function and `_` is the placeholder value, the following are all equivalent:
 
@@ -41,17 +42,25 @@ import curry from "curriable";
 
 const fn = curry((a, b, c) => [a, b, c]);
 
-console.log(fn("a", curry.__, "c")("b")); // ["a","b","c"]
+console.log(fn("a", curry.__, "c")("b")); // ["a", "b", "c"]
+
+const original = curry.uncurry(fn);
+
+console.log(original("a")); // ["a", undefined, undefined]
 ```
 
 Or the named imports:
 
 ```javascript
-import { __, curry } from "curriable";
+import { __, curry, uncurry } from "curriable";
 
 const fn = curry((a, b, c) => [a, b, c]);
 
-console.log(fn("a", __, "c")("b")); // ["a","b","c"]
+console.log(fn("a", __, "c")("b")); // ["a", "b", "c"]
+
+const original = uncurry(fn);
+
+console.log(original("a")); // ["a", undefined, undefined]
 ```
 
 #### Signature
@@ -76,7 +85,7 @@ When using rest with curried functions, you should pass a second parameter to ex
 const fn = (...args) => [a, b, c];
 const curried = curry(fn, 3);
 
-console.log(curried("a")("b")("c")); // ["a","b","c"]
+console.log(curried("a")("b")("c")); // ["a", "b", "c"]
 ```
 
 #### Default parameters
@@ -91,10 +100,24 @@ Default parameters are very rare use-case with curried functions, but it is poss
 const fn = (a, b = 1, c) => [a, b, c];
 const curried = curry(fn, 3);
 
-console.log(curried("a")(undefined)("c")); // ["a",1,"c"]
+console.log(curried("a")(undefined)("c")); // ["a", 1, "c"]
 ```
 
 Yes, this is weird, but it is very difficult (impossible?) to distinguish between a parameter being undefined through not being called yet in the curry chain vs being undefined by not being provided an explicit value. Explicitly passing `undefined` provides that distinction.
+
+#### uncurry
+
+The function `uncurry` is also available on both the default export and as a named export, and this function will return the original (uncurried) `fn` passed to `curry`.
+
+```javascript
+const curried = curry((a, b, c) => [a, b, c]);
+
+console.log(curried("a")); // function() {}
+
+const uncurried = uncurry(fn);
+
+console.log(uncurried("a")); // ["a", undefined, undefined]
+```
 
 ## Benchmarks
 
@@ -106,25 +129,25 @@ Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory 
 
 | Library       | Operations / second | Relative margin of error |
 | ------------- | ------------------- | ------------------------ |
-| **curriable** | **1,673,501**       | **1.62%**                |
-| ramda         | 1,032,968           | 0.74%                    |
-| lodash        | 153,464             | 0.95%                    |
+| **curriable** | **1,632,076**       | **1.43%**                |
+| ramda         | 1,041,570           | 1.15%                    |
+| lodash        | 138,685             | 0.88%                    |
 
 #### Passing all parameters in one call
 
 | Library       | Operations / second | Relative margin of error |
 | ------------- | ------------------- | ------------------------ |
-| **curriable** | **21,851,199**      | **1.09%**                |
-| ramda         | 8,256,763           | 1.19%                    |
-| lodash        | 6,953,740           | 1.06%                    |
+| **curriable** | **21,517,188**      | **1.36%**                |
+| ramda         | 10,064,677          | 0.97%                    |
+| lodash        | 8,031,747           | 1.18%                    |
 
 #### Using placeholder parameters in curried calls
 
 | Library       | Operations / second | Relative margin of error |
 | ------------- | ------------------- | ------------------------ |
-| **curriable** | **2,488,499**       | **0.68%**                |
-| ramda         | 1,317,015           | 0.97%                    |
-| lodash        | 202,201             | 0.63%                    |
+| **curriable** | **2,577,105**       | **1.02%**                |
+| ramda         | 1,309,428           | 1.02%                    |
+| lodash        | 204,268             | 0.77%                    |
 
 ## Development
 

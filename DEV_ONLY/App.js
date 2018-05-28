@@ -1,12 +1,11 @@
-import {__, curry} from '../src';
+import {__, curry, uncurry} from '../src';
 
 console.group('standard');
 
-const fn = (foo, bar, baz) => {
-  return [foo, bar, baz];
-};
+const fn = (foo, bar, baz) => [foo, bar, baz];
 
 const curriedFn = curry(fn);
+const uncurriedFn = uncurry(curriedFn);
 
 console.log(curriedFn('foo', 'bar', 'baz'));
 console.log(curriedFn('foo')('bar')('baz'));
@@ -19,9 +18,7 @@ console.groupEnd('standard');
 
 console.group('limited arity');
 
-const limitedFn = (foo, bar, baz) => {
-  return [foo, bar, baz];
-};
+const limitedFn = (foo, bar, baz) => [foo, bar, baz];
 
 const curriedLimitedFn = curry(limitedFn, 2);
 
@@ -40,15 +37,22 @@ console.groupEnd('limited arity');
 
 console.group('rest arity');
 
-const restFn = (...args) => {
-  return args;
-};
+const restFn = (...args) => args;
 
 const curriedRestFn = curry(restFn, 3);
 
 console.log(curriedRestFn('foo')('bar')('baz'));
 
 console.groupEnd('rest arity');
+
+console.group('uncurried');
+
+console.log(uncurriedFn('foo'));
+console.log(uncurriedFn('foo', 'bar'));
+console.log(uncurriedFn('foo', 'bar', 'baz'));
+console.log(uncurriedFn('foo', 'bar', 'baz', 'quz'));
+
+console.groupEnd('uncurried');
 
 document.body.style.backgroundColor = '#1d1d1d';
 document.body.style.color = '#d5d5d5';

@@ -3,12 +3,25 @@
   "ava": {
     "babel": "inherit",
     "failFast": true,
-    "files": ["test/*.js"],
-    "require": ["babel-register"],
-    "source": ["src/*.js"],
+    "files": [
+      "test/*.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "source": [
+      "src/*.js"
+    ],
     "verbose": true
   },
-  "browserslist": ["defaults", "Explorer >= 9", "Safari >= 6", "Opera >= 15", "iOS >= 8", "Android >= 4"],
+  "browserslist": [
+    "defaults",
+    "Explorer >= 9",
+    "Safari >= 6",
+    "Opera >= 15",
+    "iOS >= 8",
+    "Android >= 4"
+  ],
   "bugs": {
     "url": "https://github.com/planttheidea/curriable/issues"
   },
@@ -16,36 +29,41 @@
   "devDependencies": {
     "ava": "^0.25.0",
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.2.2",
+    "babel-eslint": "^8.2.3",
     "babel-loader": "^7.1.4",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-minify": "^0.4.3",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
     "benchmark": "^2.1.4",
     "cli-table": "^0.3.1",
     "cli-table2": "^0.2.0",
-    "eslint": "^4.18.2",
+    "eslint": "^4.19.1",
     "eslint-config-rapid7": "^2.11.1",
-    "eslint-friendly-formatter": "^3.0.0",
+    "eslint-friendly-formatter": "^4.0.1",
     "eslint-loader": "^2.0.0",
-    "html-webpack-plugin": "^2.30.1",
+    "html-webpack-plugin": "^3.2.0",
     "in-publish": "^2.0.0",
-    "lodash": "^4.17.5",
-    "nyc": "^11.4.1",
+    "lodash": "^4.17.10",
+    "nyc": "^11.8.0",
     "optimize-js-plugin": "^0.0.4",
-    "ora": "^2.0.0",
+    "ora": "^2.1.0",
     "performance-now": "^2.1.0",
     "ramda": "^0.25.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "rollup": "^0.57.0",
-    "rollup-plugin-babel": "^3.0.3",
-    "rollup-plugin-uglify": "^3.0.0",
-    "sinon": "^4.4.2",
-    "webpack": "^3.11.0",
-    "webpack-dev-server": "^2.11.1"
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "rollup": "^0.59.4",
+    "rollup-plugin-babel": "^3.0.4",
+    "rollup-plugin-uglify": "^4.0.0",
+    "sinon": "^5.0.10",
+    "webpack": "^4.9.1",
+    "webpack-cli": "^2.1.4",
+    "webpack-dev-server": "^3.1.4"
   },
-  "keywords": ["curry", "functional"],
+  "keywords": [
+    "curry",
+    "functional"
+  ],
   "license": "MIT",
   "homepage": "https://github.com/planttheidea/curriable#readme",
   "main": "lib/index.js",
@@ -56,7 +74,7 @@
     "url": "git+https://github.com/planttheidea/curriable.git"
   },
   "scripts": {
-    "benchmark": "npm run transpile:lib && NODE_ENV=production node ./benchmarks/index.js",
+    "benchmark": "npm run transpile:benchmark && NODE_ENV=production node ./benchmarks/index.js",
     "build": "NODE_ENV=production rollup -c",
     "clean": "npm run clean:lib && npm run clean:es && npm run clean:dist",
     "clean:dist": "rimraf dist",
@@ -67,12 +85,12 @@
     "lint": "NODE_ENV=test eslint src",
     "lint:fix": "NODE_ENV=test eslint src --fix",
     "prepublish": "if in-publish; then npm run prepublish:compile; fi",
-    "prepublish:compile":
-      "npm run lint && npm run test:coverage && npm run transpile:lib && npm run transpile:es && npm run dist",
+    "prepublish:compile": "npm run lint && npm run test:coverage && npm run transpile:lib && npm run transpile:es && npm run dist",
     "start": "npm run dev",
     "test": "NODE_PATH=. NODE_ENV=production BABEL_ENV=test ava",
     "test:coverage": "nyc npm test",
     "test:watch": "npm test -- --watch",
+    "transpile:benchmark": "npm run clean:lib && BABEL_ENV=benchmark babel src --out-dir lib",
     "transpile:lib": "npm run clean:lib && BABEL_ENV=lib babel src --out-dir lib",
     "transpile:es": "npm run clean:es && BABEL_ENV=es babel src --out-dir es"
   },
