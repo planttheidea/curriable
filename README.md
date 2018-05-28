@@ -129,25 +129,25 @@ Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory 
 
 | Library       | Operations / second | Relative margin of error |
 | ------------- | ------------------- | ------------------------ |
-| **curriable** | **1,673,501**       | **1.62%**                |
-| ramda         | 1,032,968           | 0.74%                    |
-| lodash        | 153,464             | 0.95%                    |
+| **curriable** | **1,632,076**       | **1.43%**                |
+| ramda         | 1,041,570           | 1.15%                    |
+| lodash        | 138,685             | 0.88%                    |
 
 #### Passing all parameters in one call
 
 | Library       | Operations / second | Relative margin of error |
 | ------------- | ------------------- | ------------------------ |
-| **curriable** | **21,851,199**      | **1.09%**                |
-| ramda         | 8,256,763           | 1.19%                    |
-| lodash        | 6,953,740           | 1.06%                    |
+| **curriable** | **21,517,188**      | **1.36%**                |
+| ramda         | 10,064,677          | 0.97%                    |
+| lodash        | 8,031,747           | 1.18%                    |
 
 #### Using placeholder parameters in curried calls
 
 | Library       | Operations / second | Relative margin of error |
 | ------------- | ------------------- | ------------------------ |
-| **curriable** | **2,488,499**       | **0.68%**                |
-| ramda         | 1,317,015           | 0.97%                    |
-| lodash        | 202,201             | 0.63%                    |
+| **curriable** | **2,577,105**       | **1.02%**                |
+| ramda         | 1,309,428           | 1.02%                    |
+| lodash        | 204,268             | 0.77%                    |
 
 ## Development
 
