@@ -63,5 +63,5 @@
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.1.0"
+  "version": "1.2.0"
 }
