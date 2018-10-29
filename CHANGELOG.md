@@ -1,5 +1,9 @@
 # curriable CHANGELOG
 
+## 1.2.1
+
+- Remove unneeded files from publish
+
 ## 1.2.0
 
 - Rewrite to use `typescript`
