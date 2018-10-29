@@ -4,34 +4,34 @@ Curry any function with placeholder support
 
 ## Table of contents
 
-* [Summary](#summary)
-* [Usage](#usage)
-  * [Signature](#signature)
-  * [Rest parameters](#rest-parameters)
-  * [Default parameters](#default-parameters)
-  * [uncurry](#uncurry)
-* [Benchmarks](#benchmarks)
-  * [Passing each parameter in curried calls](#passing-each-parameter-in-curried-calls)
-  * [Passing all parameters in one call](#passing-all-parameters-in-one-call)
-  * [Using placeholder parameters in curried calls](#using-placeholder-parameters-in-curried-calls)
-* [Development](#development)
+- [Summary](#summary)
+- [Usage](#usage)
+  - [Signature](#signature)
+  - [Rest parameters](#rest-parameters)
+  - [Default parameters](#default-parameters)
+  - [uncurry](#uncurry)
+- [Benchmarks](#benchmarks)
+  - [Passing each parameter in curried calls](#passing-each-parameter-in-curried-calls)
+  - [Passing all parameters in one call](#passing-all-parameters-in-one-call)
+  - [Using placeholder parameters in curried calls](#using-placeholder-parameters-in-curried-calls)
+- [Development](#development)
 
 ## Summary
 
-`curriable` provides a `curry` method that is [highly performant](#benchmarks) with a small footprint (_578 bytes minified+gzipped_). You can call the method with any combination of parameters (one at a time, all at once, or any number in between), and placeholders are supported.
+`curriable` provides a `curry` method that is [highly performant](#benchmarks) with a small footprint (_473 bytes minified+gzipped_). You can call the method with any combination of parameters (one at a time, all at once, or any number in between), and placeholders are supported.
 
 If `fn` is the curried function and `_` is the placeholder value, the following are all equivalent:
 
-* `fn(1)(2)(3)`
-* `fn(1)(2, 3)`
-* `fn(1, 2)(3)`
-* `fn(1, 2, 3)`
-* `fn(_, 2, 3)(1)`
-* `fn(_, _, 3)(1)(2)`
-* `fn(_, _, 3)(1, 2)`
-* `fn(_, 2)(1)(3)`
-* `fn(_, 2)(1, 3)`
-* `fn(_, 2)(_, 3)(1)`
+- `fn(1)(2)(3)`
+- `fn(1)(2, 3)`
+- `fn(1, 2)(3)`
+- `fn(1, 2, 3)`
+- `fn(_, 2, 3)(1)`
+- `fn(_, _, 3)(1)(2)`
+- `fn(_, _, 3)(1, 2)`
+- `fn(_, 2)(1)(3)`
+- `fn(_, 2)(1, 3)`
+- `fn(_, 2)(_, 3)(1)`
 
 ## Usage
 
@@ -153,19 +153,19 @@ Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory 
 
 Standard stuff, clone the repo and `npm install` dependencies. The npm scripts available:
 
-* `benchmark` => run the benchmark suite pitting `curriable` against other libraries in common use-cases
-* `clean` => run `clean:lib`, `clean:es`, and `clean:dist`
-* `clean:dist` => run `rimraf` on the `dist` folder
-* `clean:es` => run `rimraf` on the `es` folder
-* `clean:lib` => run `rimraf` on the `lib` folder
-* `dev` => run webpack dev server to run example app (playground!)
-* `dist` => runs `clean:dist` and `build`
-* `lint` => runs ESLint against all files in the `src` folder
-* `lint:fix` => runs `lint``, fixing any errors if possible
-* `prepublish` => runs `compile-for-publish`
-* `prepublish:compile` => run `lint`, `flow`, `test:coverage`, `transpile:lib`, `transpile:es`, and `dist`
-* `test` => run AVA test functions with `NODE_ENV=test`
-* `test:coverage` => run `test` but with `nyc` for coverage checker
-* `test:watch` => run `test`, but with persistent watcher
-* `transpile:es` => run babel against all files in `src` to create files in `es`, preserving ES2015 modules (for [`pkg.module`](https://github.com/rollup/rollup/wiki/pkg.module))
-* `transpile:lib` => run babel against all files in `src` to create files in `lib`
+- `benchmark` => run the benchmark suite pitting `curriable` against other libraries in common use-cases
+- `clean` => run `clean:lib`, `clean:es`, and `clean:dist`
+- `clean:dist` => run `rimraf` on the `dist` folder
+- `clean:es` => run `rimraf` on the `es` folder
+- `clean:lib` => run `rimraf` on the `lib` folder
+- `dev` => run webpack dev server to run example app (playground!)
+- `dist` => runs `clean:dist` and `build`
+- `lint` => runs ESLint against all files in the `src` folder
+- `lint:fix` => runs `lint``, fixing any errors if possible
+- `prepublish` => runs `compile-for-publish`
+- `prepublish:compile` => run `lint`, `flow`, `test:coverage`, `transpile:lib`, `transpile:es`, and `dist`
+- `test` => run AVA test functions with `NODE_ENV=test`
+- `test:coverage` => run `test` but with `nyc` for coverage checker
+- `test:watch` => run `test`, but with persistent watcher
+- `transpile:es` => run babel against all files in `src` to create files in `es`, preserving ES2015 modules (for [`pkg.module`](https://github.com/rollup/rollup/wiki/pkg.module))
+- `transpile:lib` => run babel against all files in `src` to create files in `lib`

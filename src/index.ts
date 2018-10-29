@@ -1,7 +1,7 @@
 // utils
-import {__, getArgs, hasPlaceholder} from './utils';
+import { __, getArgs, hasPlaceholder } from './utils';
 
-export {__};
+export { __ };
 
 /**
  * @function curry
@@ -9,17 +9,20 @@ export {__};
  * @description
  * get the method passed as a curriable method based on its parameters
  *
- * @param {function} fn the method to make curriable
- * @param {number} [arity=fn.length] the arity of the curried method
- * @returns {function(...Array<any>): any} the fn passed as a curried function
+ * @param fn the method to make curriable
+ * @param arity the arity of the curried method
+ * @returns the fn passed as a curried function
  */
-export function curry(fn, arity = fn.length) {
+export const curry = (
+  fn: Function,
+  arity: number = fn.length,
+): CurriedFunction => {
   function curried() {
     const args = arguments;
 
     return args.length >= arity && !hasPlaceholder(args, arity)
       ? fn.apply(this, args)
-      : function() {
+      : function () {
         return curried.apply(this, getArgs(args, arguments));
       };
   }
@@ -28,7 +31,7 @@ export function curry(fn, arity = fn.length) {
   curried.fn = fn;
 
   return curried;
-}
+};
 
 curry.__ = __;
 
@@ -38,12 +41,10 @@ curry.__ = __;
  * @description
  * return a function that is the non-curried version of the fn passed
  *
- * @param {function} curried the curried function to uncurry
- * @returns {function} the original fn
+ * @param curried the curried function to uncurry
+ * @returns the original fn
  */
-export function uncurry(curried) {
-  return curried.fn;
-}
+export const uncurry = (curried: CurriedFunction): Function => curried.fn;
 
 curry.uncurry = uncurry;
 

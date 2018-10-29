@@ -5,11 +5,11 @@
 .idea
 .npmignore
 .nyc_output
+__tests__
 coverage
 DEV_ONLY
 node_modules
 src
-test
 webpack
 *.log
 yarn.lock
