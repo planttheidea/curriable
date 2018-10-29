@@ -6,10 +6,14 @@
 .npmignore
 .nyc_output
 __tests__
+benchmarks
 coverage
 DEV_ONLY
 node_modules
 src
 webpack
+jest.config.js
+tsconfig.json
+tslint.json
 *.log
 yarn.lock
