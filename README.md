@@ -154,18 +154,14 @@ Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory 
 Standard stuff, clone the repo and `npm install` dependencies. The npm scripts available:
 
 - `benchmark` => run the benchmark suite pitting `curriable` against other libraries in common use-cases
-- `clean` => run `clean:lib`, `clean:es`, and `clean:dist`
-- `clean:dist` => run `rimraf` on the `dist` folder
-- `clean:es` => run `rimraf` on the `es` folder
-- `clean:lib` => run `rimraf` on the `lib` folder
+- `build` => run `rollup` to build `dist` files
+- `build:types` => create the `index.d.ts` types file
+- `clean` => run `rimraf` on the `lib` folder
 - `dev` => run webpack dev server to run example app (playground!)
-- `dist` => runs `clean:dist` and `build`
-- `lint` => runs ESLint against all files in the `src` folder
+- `lint` => runs `tslint` against all files in the `src` folder
 - `lint:fix` => runs `lint``, fixing any errors if possible
-- `prepublish` => runs `compile-for-publish`
+- `prepublish` => runs `prepublish:compile`
 - `prepublish:compile` => run `lint`, `flow`, `test:coverage`, `transpile:lib`, `transpile:es`, and `dist`
-- `test` => run AVA test functions with `NODE_ENV=test`
-- `test:coverage` => run `test` but with `nyc` for coverage checker
+- `test` => run `jest` test functions
+- `test:coverage` => run `test`, but with coverage checker
 - `test:watch` => run `test`, but with persistent watcher
-- `transpile:es` => run babel against all files in `src` to create files in `es`, preserving ES2015 modules (for [`pkg.module`](https://github.com/rollup/rollup/wiki/pkg.module))
-- `transpile:lib` => run babel against all files in `src` to create files in `lib`
