@@ -1,5 +1,9 @@
 # curriable CHANGELOG
 
+## 1.2.2
+
+- Fix exported typings
+
 ## 1.2.1
 
 - Remove unneeded files from publish
