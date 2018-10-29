@@ -1,30 +1,27 @@
-'use strict';
+"use strict";
 
-const assert = require('assert');
+const assert = require("assert");
 
-const _ = require('lodash');
-const fs = require('fs');
-const React = require('react');
+const _ = require("lodash");
+const fs = require("fs");
 
-const Benchmark = require('benchmark');
-const Table = require('cli-table2');
-const ora = require('ora');
+const Benchmark = require("benchmark");
+const Table = require("cli-table2");
+const ora = require("ora");
 
 const lodash = _.curry;
 const lodash__ = lodash.placeholder;
-const ramda = require('ramda').curry;
-const ramda__ = require('ramda').__;
-const curriable = require('../lib').default;
-const curriable__ = require('../lib').__;
+const { __: ramda__, curry: ramda } = require("ramda");
+const { __: curriable__, curry: curriable } = require("../dist/curriable");
 
-const showResults = (benchmarkResults) => {
+const showResults = benchmarkResults => {
   const table = new Table({
-    head: ['Name', 'Ops / sec', 'Relative margin of error', 'Sample size']
+    head: ["Name", "Ops / sec", "Relative margin of error", "Sample size"]
   });
 
-  benchmarkResults.forEach((result) => {
+  benchmarkResults.forEach(result => {
     const name = result.target.name;
-    const opsPerSecond = result.target.hz.toLocaleString('en-US', {
+    const opsPerSecond = result.target.hz.toLocaleString("en-US", {
       maximumFractionDigits: 0
     });
     const relativeMarginOferror = `± ${result.target.stats.rme.toFixed(2)}%`;
@@ -36,21 +33,21 @@ const showResults = (benchmarkResults) => {
   console.log(table.toString()); // eslint-disable-line no-console
 };
 
-const sortDescResults = (benchmarkResults) => {
+const sortDescResults = benchmarkResults => {
   return benchmarkResults.sort((a, b) => {
     return a.target.hz < b.target.hz ? 1 : -1;
   });
 };
 
-const spinner = ora('Running benchmark');
+const spinner = ora("Running benchmark");
 
 let cliResults = [],
-    csvResults = {};
+  csvResults = {};
 
-const onCycle = (event) => {
+const onCycle = event => {
   cliResults.push(event);
 
-  const {currentTarget, target} = event;
+  const { currentTarget, target } = event;
 
   if (!csvResults[currentTarget.name]) {
     csvResults[currentTarget.name] = {};
@@ -77,22 +74,22 @@ const curryCurriable = curriable(fn);
 const curryLodash = lodash(fn);
 const curryRamda = ramda(fn);
 
-const a = 'a';
-const b = 'b';
-const c = 'c';
-const d = 'd';
+const a = "a";
+const b = "b";
+const c = "c";
+const d = "d";
 
 const runCurriedParamsSuite = () => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     new Benchmark.Suite({
-      name: 'curried parameters',
+      name: "curried parameters",
       onComplete() {
         onComplete();
         resolve();
       },
       onCycle,
       onStart() {
-        console.log(''); // eslint-disable-line no-console
+        console.log(""); // eslint-disable-line no-console
         console.log(`Starting cycles for curried parameters...`); // eslint-disable-line no-console
 
         cliResults = [];
@@ -101,30 +98,30 @@ const runCurriedParamsSuite = () => {
       },
       queued: true
     })
-      .add('curriable', () => {
+      .add("curriable", () => {
         curryCurriable(a)(b)(c)(d);
       })
-      .add('lodash', () => {
+      .add("lodash", () => {
         curryLodash(a)(b)(c)(d);
       })
-      .add('ramda', () => {
+      .add("ramda", () => {
         curryRamda(a)(b)(c)(d);
       })
-      .run({async: true});
+      .run({ async: true });
   });
 };
 
 const runAllParamsSuite = () => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     new Benchmark.Suite({
-      name: 'all parameters',
+      name: "all parameters",
       onComplete() {
         onComplete();
         resolve();
       },
       onCycle,
       onStart() {
-        console.log(''); // eslint-disable-line no-console
+        console.log(""); // eslint-disable-line no-console
         console.log(`Starting cycles for all parameters...`); // eslint-disable-line no-console
 
         cliResults = [];
@@ -133,30 +130,30 @@ const runAllParamsSuite = () => {
       },
       queued: true
     })
-      .add('curriable', () => {
+      .add("curriable", () => {
         curryCurriable(a, b, c, d);
       })
-      .add('lodash', () => {
+      .add("lodash", () => {
         curryLodash(a, b, c, d);
       })
-      .add('ramda', () => {
+      .add("ramda", () => {
         curryRamda(a, b, c, d);
       })
-      .run({async: true});
+      .run({ async: true });
   });
 };
 
 const runPlaceholderParamsSuite = () => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     new Benchmark.Suite({
-      name: 'all parameters',
+      name: "all parameters",
       onComplete() {
         onComplete();
         resolve();
       },
       onCycle,
       onStart() {
-        console.log(''); // eslint-disable-line no-console
+        console.log(""); // eslint-disable-line no-console
         console.log(`Starting cycles for placeholder parameters...`); // eslint-disable-line no-console
 
         cliResults = [];
@@ -165,26 +162,29 @@ const runPlaceholderParamsSuite = () => {
       },
       queued: true
     })
-      .add('curriable', () => {
+      .add("curriable", () => {
         curryCurriable(a, curriable__, c, curriable__)(b)(d);
       })
-      .add('lodash', () => {
+      .add("lodash", () => {
         curryLodash(a, lodash__, c, lodash__)(b)(d);
       })
-      .add('ramda', () => {
+      .add("ramda", () => {
         curryRamda(a, ramda__, c, ramda__)(b)(d);
       })
-      .run({async: true});
+      .run({ async: true });
   });
 };
 
-const testMethod = ({method, name, placeholder}) => {
+const testMethod = ({ method, name, placeholder }) => {
   const expectedResult = [a, b, c, d];
 
   try {
     assert.deepEqual(method(a)(b)(c)(d), expectedResult);
     assert.deepEqual(method(a, b, c, d), expectedResult);
-    assert.deepEqual(method(a, placeholder, c, placeholder)(b)(d), expectedResult);
+    assert.deepEqual(
+      method(a, placeholder, c, placeholder)(b)(d),
+      expectedResult
+    );
 
     console.log(`${name} passed all checks.`);
   } catch (error) {
@@ -192,13 +192,13 @@ const testMethod = ({method, name, placeholder}) => {
   }
 };
 
-console.log('');
+console.log("");
 
-new Promise((resolve) => {
+new Promise(resolve => {
   [
-    {method: curryCurriable, name: 'curriable', placeholder: curriable__},
-    {method: curryLodash, name: 'lodash', placeholder: lodash__},
-    {method: curryRamda, name: 'ramda', placeholder: ramda__}
+    { method: curryCurriable, name: "curriable", placeholder: curriable__ },
+    { method: curryLodash, name: "lodash", placeholder: lodash__ },
+    { method: curryRamda, name: "ramda", placeholder: ramda__ }
   ].forEach(testMethod);
 
   resolve();
