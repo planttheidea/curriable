@@ -1,6 +1,6 @@
 # curriable CHANGELOG
 
-## 1.1.1
+## 1.2.0
 
 - Rewrite to use `typescript`
 
