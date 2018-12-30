@@ -1,5 +1,6 @@
 {
   "author": "tony_quetano@planttheidea.com",
+  "browser": "dist/curriable.js",
   "browserslist": [
     "defaults",
     "Explorer >= 9",
@@ -25,7 +26,8 @@
     "performance-now": "^2.1.0",
     "ramda": "^0.25.0",
     "rollup": "^0.66.6",
-    "rollup-plugin-typescript": "^1.0.0",
+    "rollup-plugin-babel-minify": "^6.2.0",
+    "rollup-plugin-typescript2": "^0.18.1",
     "rollup-plugin-uglify": "^6.0.0",
     "ts-jest": "^23.10.4",
     "ts-loader": "^5.2.2",
@@ -43,7 +45,8 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/planttheidea/curriable#readme",
-  "main": "dist/curriable.js",
+  "main": "dist/curriable.cjs.js",
+  "module": "dist/curriable.esm.js",
   "name": "curriable",
   "repository": {
     "type": "git",
@@ -65,5 +68,5 @@
   },
   "sideEffects": false,
   "types": "index.d.ts",
-  "version": "1.2.2"
+  "version": "1.2.3"
 }

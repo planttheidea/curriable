@@ -1,26 +1,60 @@
-import typescript from "rollup-plugin-typescript";
-import { uglify } from "rollup-plugin-uglify";
+import typescript from "rollup-plugin-typescript2";
+import minify from "rollup-plugin-babel-minify";
+
+import pkg from "./package.json";
+
+const UMD_CONFIG = {
+  external: [
+    ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.peerDependencies || {})
+  ],
+  input: "src/index.ts",
+  output: {
+    exports: "named",
+    name: pkg.name,
+    file: pkg.browser,
+    format: "umd",
+    sourcemap: true
+  },
+  plugins: [
+    typescript({
+      typescript: require("typescript")
+    })
+  ]
+};
+
+const FORMATTED_CONFIG = {
+  ...UMD_CONFIG,
+  output: [
+    {
+      ...UMD_CONFIG.output,
+      file: pkg.main,
+      format: "cjs"
+    },
+    {
+      ...UMD_CONFIG.output,
+      file: pkg.module,
+      format: "es"
+    }
+  ]
+};
 
 export default [
+  UMD_CONFIG,
+  FORMATTED_CONFIG,
   {
-    input: "src/index.ts",
+    ...UMD_CONFIG,
     output: {
-      exports: "named",
-      name: "curriable",
-      file: "dist/curriable.js",
-      format: "umd",
-      sourcemap: true
+      ...UMD_CONFIG.output,
+      file: pkg.browser.replace(".js", ".min.js"),
+      sourcemap: false
     },
-    plugins: [typescript()]
-  },
-  {
-    input: "src/index.ts",
-    output: {
-      exports: "named",
-      name: "curriable",
-      file: "dist/curriable.min.js",
-      format: "umd"
-    },
-    plugins: [typescript(), uglify()]
+    plugins: [
+      ...UMD_CONFIG.plugins,
+      minify({
+        comments: false,
+        sourceMap: false
+      })
+    ]
   }
 ];

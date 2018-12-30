@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "allowJs": true,
     "baseUrl": "src",
+    "declaration": true,
+    "declarationDir": "./",
     "esModuleInterop": true,
     "jsx": "react",
     "lib": ["dom", "es2015"],
@@ -11,5 +12,7 @@
     "outDir": "./dist",
     "sourceMap": true,
     "target": "es5"
-  }
+  },
+  "exclude": ["node_modules"],
+  "include": ["src/*"]
 }
