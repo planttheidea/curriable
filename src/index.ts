@@ -17,12 +17,12 @@ export const curry = (
   fn: Function,
   arity: number = fn.length,
 ): CurriedFunction => {
-  function curried() {
-    const args = arguments;
+  function curried(): any {
+    const args: IArguments = arguments;
 
     return args.length >= arity && !hasPlaceholder(args, arity)
       ? fn.apply(this, args)
-      : function () {
+      : function (): any {
         return curried.apply(this, getArgs(args, arguments));
       };
   }
