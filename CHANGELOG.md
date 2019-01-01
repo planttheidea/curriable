@@ -1,8 +1,12 @@
 # curriable CHANGELOG
 
-## 1.2.0
+## 1.2.4
 
 - Refactor under the hood to make performance more consistent across browsers
+
+## 1.2.3
+
+- Improve `rollup` build (have distinct UMD, CommonJS, and ESM builds)
 
 ## 1.2.2
 
