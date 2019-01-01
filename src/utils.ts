@@ -1,58 +1,61 @@
+/**
+ * @constant __ placeholder used when parameters are skipped
+ */
 export const __: Placeholder =
   typeof Symbol === 'function' ? Symbol('curriable placeholder') : 0xedd1;
 
 /**
- * @function getArgs
+ * @function recursiveCurry
  *
  * @description
- * get the complete args with previous placeholders being filled in
+ * recursively curry over the arguments until all have been resolved
  *
- * @param originalArgs the arguments from the previous run
- * @param nextArgs the arguments from the next run
- * @returns the complete list of args
+ * @param fn the function to curry
+ * @param arity the length of the function to curry until
+ * @param args the existing arguments
+ * @returns the result of the function call
  */
-export const getArgs = (
-  originalArgs: IArguments,
-  nextArgs: IArguments,
-): any[] => {
-  const length: number = originalArgs.length;
-  const nextLength: number = nextArgs.length;
-  const args: any[] = new Array(length);
+export const recursiveCurry: Function = (
+  fn: Function,
+  arity: number,
+  args: any[],
+): any =>
+  function () {
+    const length: number = args.length;
 
-  let nextArgsIndex: number = 0;
+    const newArgs: IArguments = arguments;
+    const newArgsLength: number = newArgs.length;
 
-  for (let index: number = 0; index < length; index++) {
-    args[index] =
-      originalArgs[index] === __ && nextArgsIndex < nextLength
-        ? nextArgs[nextArgsIndex++]
-        : originalArgs[index];
-  }
+    const combined: any[] = [];
 
-  if (nextArgsIndex < nextLength) {
-    for (; nextArgsIndex < nextLength; nextArgsIndex++) {
-      args.push(nextArgs[nextArgsIndex]);
+    let newArgsIndex: number = 0;
+    let remaining: number = arity;
+    let value: any;
+
+    for (let index: number = 0; index < length; index++) {
+      value = combined[index] =
+        args[index] === __ && newArgsIndex < newArgsLength
+          ? newArgs[newArgsIndex++]
+          : args[index];
+
+      if (value !== __) {
+        --remaining;
+      }
     }
-  }
 
-  return args;
-};
+    if (newArgsIndex < newArgsLength) {
+      for (; newArgsIndex < newArgsLength; newArgsIndex++) {
+        value = newArgs[newArgsIndex];
 
-/**
- * @function hasPlaceholder
- *
- * @description
- * determine if any of the arguments are placeholders
- *
- * @param args the args passed to the function
- * @param arity the arity of the function
- * @returns are any of the args placeholders
- */
-export const hasPlaceholder = (args: IArguments, arity: number): boolean => {
-  for (let index: number = 0; index < arity; index++) {
-    if (args[index] === __) {
-      return true;
+        combined.push(value);
+
+        if (value !== __ && newArgsIndex < arity) {
+          --remaining;
+        }
+      }
     }
-  }
 
-  return false;
-};
+    return remaining > 0
+      ? recursiveCurry(fn, arity, combined)
+      : fn.apply(this, combined);
+  };

@@ -1,11 +1,24 @@
 import { __, curry, uncurry } from '../src';
 
-console.group('standard');
+// import '../benchmarks';
+
+document.body.style.backgroundColor = '#1d1d1d';
+document.body.style.color = '#d5d5d5';
+document.body.style.margin = '0px';
+document.body.style.padding = '0px';
+
+const div = document.createElement('div');
+
+div.textContent = 'Check the console for details.';
+
+document.body.appendChild(div);
 
 const fn = (foo: string, bar: string, baz: string): string[] => [foo, bar, baz];
 
 const curriedFn = curry(fn);
 const uncurriedFn = uncurry(curriedFn);
+
+console.group('standard');
 
 console.log(curriedFn('foo', 'bar', 'baz'));
 console.log(curriedFn('foo')('bar')('baz'));
@@ -51,14 +64,3 @@ console.log(uncurriedFn('foo', 'bar', 'baz'));
 console.log(uncurriedFn('foo', 'bar', 'baz', 'quz'));
 
 console.groupEnd();
-
-document.body.style.backgroundColor = '#1d1d1d';
-document.body.style.color = '#d5d5d5';
-document.body.style.margin = '0px';
-document.body.style.padding = '0px';
-
-const div = document.createElement('div');
-
-div.textContent = 'Check the console for details.';
-
-document.body.appendChild(div);
