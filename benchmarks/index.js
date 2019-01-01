@@ -7,7 +7,6 @@ const fs = require("fs");
 
 const Benchmark = require("benchmark");
 const Table = require("cli-table2");
-const ora = require("ora");
 
 const lodash = _.curry;
 const lodash__ = lodash.placeholder;
@@ -39,8 +38,6 @@ const sortDescResults = benchmarkResults => {
   });
 };
 
-const spinner = ora("Running benchmark");
-
 let cliResults = [],
   csvResults = {};
 
@@ -54,13 +51,9 @@ const onCycle = event => {
   }
 
   csvResults[currentTarget.name][target.name] = ~~event.target.hz;
-
-  ora(target.name).succeed();
 };
 
 const onComplete = () => {
-  spinner.stop();
-
   const orderedBenchmarkResults = sortDescResults(cliResults);
 
   showResults(orderedBenchmarkResults);
@@ -93,8 +86,6 @@ const runCurriedParamsSuite = () => {
         console.log(`Starting cycles for curried parameters...`); // eslint-disable-line no-console
 
         cliResults = [];
-
-        spinner.start();
       },
       queued: true
     })
@@ -125,8 +116,6 @@ const runAllParamsSuite = () => {
         console.log(`Starting cycles for all parameters...`); // eslint-disable-line no-console
 
         cliResults = [];
-
-        spinner.start();
       },
       queued: true
     })
@@ -157,8 +146,6 @@ const runPlaceholderParamsSuite = () => {
         console.log(`Starting cycles for placeholder parameters...`); // eslint-disable-line no-console
 
         cliResults = [];
-
-        spinner.start();
       },
       queued: true
     })

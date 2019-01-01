@@ -44,6 +44,10 @@ module.exports = {
     ]
   },
 
+  node: {
+    fs: "empty"
+  },
+
   output: {
     filename: "curriable.js",
     library: "curriable",

@@ -1,55 +1,89 @@
-import { __, getArgs, hasPlaceholder } from '../src/utils';
+import { __, recursiveCurry } from '../src/utils';
 
-describe('getArgs', () => {
-  it('should determine the complete args to pass when there are none remaining', () => {
-    const originalArgs: (number | Placeholder)[] = [1, __, 3];
-    const futureArgs: number[] = [2];
+const fn = (foo: string, bar: string, baz: string): string[] => [foo, bar, baz];
 
-    // @ts-ignore
-    const result: number[] = getArgs(originalArgs, [...futureArgs]);
+const standard = recursiveCurry(fn, fn.length, []);
 
-    expect(result).toEqual(
-      originalArgs.map((arg: number | Placeholder) => {
-        return arg !== __ ? arg : futureArgs.shift();
-      }),
-    );
+describe('recursiveCurry - derived arity', () => {
+  it('should handle all arguments passed on first call', () => {
+    const result = standard('foo', 'bar', 'baz');
+
+    expect(result).toEqual(['foo', 'bar', 'baz']);
   });
 
-  it('should determine the complete args to pass when there are remaining', () => {
-    const originalArgs: (number | Placeholder)[] = [1, __, 3];
-    const futureArgs: number[] = [2, 4];
+  it('should handle curried application of all arguments', () => {
+    const result = standard('foo')('bar')('baz');
 
-    // @ts-ignore
-    const result: number[] = getArgs(originalArgs, [...futureArgs]);
+    expect(result).toEqual(['foo', 'bar', 'baz']);
+  });
 
-    expect(result).toEqual(
-      originalArgs
-        .map((arg: number | Placeholder) => {
-          return arg !== __ ? arg : futureArgs.shift();
-        })
-        .concat(futureArgs),
-    );
+  it('should handle curried application of some arguments', () => {
+    const result = standard('foo')('bar', 'baz');
+
+    expect(result).toEqual(['foo', 'bar', 'baz']);
+  });
+
+  it('should handle placeholder arguments', () => {
+    const result = standard(__, 'bar', 'baz')('foo');
+
+    expect(result).toEqual(['foo', 'bar', 'baz']);
+  });
+
+  it('should handle placeholder arguments with curried application', () => {
+    const result = standard(__, 'bar')(__, 'baz')('foo');
+
+    expect(result).toEqual(['foo', 'bar', 'baz']);
+  });
+
+  it('should handle placeholder arguments with ridiculous application', () => {
+    const result = standard(__, __, __)('foo')(__, 'baz')('bar');
+
+    expect(result).toEqual(['foo', 'bar', 'baz']);
   });
 });
 
-describe('hasPlaceholder', () => {
-  it('should be true if the args has a placeholder', () => {
-    const args = [1, __, 3];
-    const arity = 3;
+const limited = recursiveCurry(fn, 2, []);
 
-    // @ts-ignore
-    const result = hasPlaceholder(args, arity);
+describe('recursiveCurry - limited arity', () => {
+  it('should handle all arguments passed on first call', () => {
+    const result = limited('foo', 'bar', 'baz');
 
-    expect(result).toBe(true);
+    expect(result).toEqual(['foo', 'bar', 'baz']);
   });
 
-  it('should be false if the args do not have a placeholder', () => {
-    const args = [1, 2, 3];
-    const arity = 3;
+  it('should handle curried application of all arguments', () => {
+    const result = limited('foo')('bar');
 
-    // @ts-ignore
-    const result = hasPlaceholder(args, arity);
+    expect(result).toEqual(['foo', 'bar', undefined]);
+  });
 
-    expect(result).toBe(false);
+  it('should handle placeholder arguments', () => {
+    const result = limited(__, 'bar', 'baz')('foo');
+
+    expect(result).toEqual(['foo', 'bar', 'baz']);
+  });
+
+  it('should handle placeholder arguments with ridiculous application', () => {
+    const result = limited(__, __)('foo', __)('bar');
+
+    expect(result).toEqual(['foo', 'bar', undefined]);
+  });
+});
+
+const restFn = (...args: any[]): any => [].slice.call(args);
+
+const rest = recursiveCurry(restFn, 3, []);
+
+describe('recursiveCurry - limited arity', () => {
+  it('should handle all arguments passed on first call', () => {
+    const result = rest('foo', 'bar', 'baz');
+
+    expect(result).toEqual(['foo', 'bar', 'baz']);
+  });
+
+  it('should handle curried application of all arguments', () => {
+    const result = rest('foo')('bar')('baz');
+
+    expect(result).toEqual(['foo', 'bar', 'baz']);
   });
 });

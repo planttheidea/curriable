@@ -1,5 +1,5 @@
 // utils
-import { __, getArgs, hasPlaceholder } from './utils';
+import { __, recursiveCurry } from './utils';
 
 export { __ };
 
@@ -17,15 +17,7 @@ export const curry = (
   fn: Function,
   arity: number = fn.length,
 ): CurriedFunction => {
-  function curried(): any {
-    const args: IArguments = arguments;
-
-    return args.length >= arity && !hasPlaceholder(args, arity)
-      ? fn.apply(this, args)
-      : function (): any {
-        return curried.apply(this, getArgs(args, arguments));
-      };
-  }
+  const curried = recursiveCurry(fn, arity, []);
 
   curried.arity = arity;
   curried.fn = fn;
