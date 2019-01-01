@@ -1,5 +1,9 @@
 # curriable CHANGELOG
 
+## 1.2.0
+
+- Refactor under the hood to make performance more consistent across browsers
+
 ## 1.2.2
 
 - Fix exported typings

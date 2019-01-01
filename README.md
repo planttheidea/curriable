@@ -18,7 +18,7 @@ Curry any function with placeholder support
 
 ## Summary
 
-`curriable` provides a `curry` method that is [highly performant](#benchmarks) with a small footprint (_473 bytes minified+gzipped_). You can call the method with any combination of parameters (one at a time, all at once, or any number in between), and placeholders are supported.
+`curriable` provides a `curry` method that is [highly performant](#benchmarks) with a small footprint (_573 bytes minified+gzipped_). You can call the method with any combination of parameters (one at a time, all at once, or any number in between), and placeholders are supported.
 
 If `fn` is the curried function and `_` is the placeholder value, the following are all equivalent:
 
@@ -123,31 +123,31 @@ console.log(uncurried("a")); // ["a", undefined, undefined]
 
 All values provided are the number of operations per second (ops/sec) calculated by the [Benchmark suite](https://benchmarkjs.com/). The same function was curried and tested passing each parameter individually, passing all at once, and using placeholders.
 
-Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory using NodeJS version `8.9.4`.
+Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory using NodeJS version `10.15.0`.
 
 #### Passing each parameter in curried calls
 
 | Library       | Operations / second | Relative margin of error |
 | ------------- | ------------------- | ------------------------ |
-| **curriable** | **1,632,076**       | **1.43%**                |
-| ramda         | 1,041,570           | 1.15%                    |
-| lodash        | 138,685             | 0.88%                    |
+| **curriable** | **3,577,400**       | **1.22%**                |
+| ramda         | 2,327,403           | 1.00%                    |
+| lodash        | 211,666             | 0.62%                    |
 
 #### Passing all parameters in one call
 
 | Library       | Operations / second | Relative margin of error |
 | ------------- | ------------------- | ------------------------ |
-| **curriable** | **21,517,188**      | **1.36%**                |
-| ramda         | 10,064,677          | 0.97%                    |
-| lodash        | 8,031,747           | 1.18%                    |
+| **curriable** | **17,081,266**      | **0.59%**                |
+| ramda         | 13,347,748          | 0.67%                    |
+| lodash        | 9,398,950           | 0.70%                    |
 
 #### Using placeholder parameters in curried calls
 
 | Library       | Operations / second | Relative margin of error |
 | ------------- | ------------------- | ------------------------ |
-| **curriable** | **2,577,105**       | **1.02%**                |
-| ramda         | 1,309,428           | 1.02%                    |
-| lodash        | 204,268             | 0.77%                    |
+| **curriable** | **4,341,722**       | **0.63%**                |
+| ramda         | 2,902,086           | 0.66%                    |
+| lodash        | 280,139             | 0.50%                    |
 
 ## Development
 
@@ -155,13 +155,12 @@ Standard stuff, clone the repo and `npm install` dependencies. The npm scripts a
 
 - `benchmark` => run the benchmark suite pitting `curriable` against other libraries in common use-cases
 - `build` => run `rollup` to build `dist` files
-- `build:types` => create the `index.d.ts` types file
-- `clean` => run `rimraf` on the `lib` folder
+- `clean` => run `rimraf` on the `dist` folder
 - `dev` => run webpack dev server to run example app (playground!)
 - `lint` => runs `tslint` against all files in the `src` folder
-- `lint:fix` => runs `lint``, fixing any errors if possible
+- `lint:fix` => runs `lint`, fixing any errors if possible
 - `prepublish` => runs `prepublish:compile`
-- `prepublish:compile` => run `lint`, `flow`, `test:coverage`, `transpile:lib`, `transpile:es`, and `dist`
+- `prepublish:compile` => run `lint`, `flow`, `test:coverage`, `clean`, and `dist`
 - `test` => run `jest` test functions
 - `test:coverage` => run `test`, but with coverage checker
 - `test:watch` => run `test`, but with persistent watcher

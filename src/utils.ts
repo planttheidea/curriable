@@ -32,14 +32,16 @@ export const recursiveCurry: Function = (
     let remaining: number = arity;
     let value: any;
 
-    for (let index: number = 0; index < length; index++) {
-      value = combined[index] =
-        args[index] === __ && newArgsIndex < newArgsLength
-          ? newArgs[newArgsIndex++]
-          : args[index];
+    if (length) {
+      for (let index: number = 0; index < length; index++) {
+        value = combined[index] =
+          args[index] === __ && newArgsIndex < newArgsLength
+            ? newArgs[newArgsIndex++]
+            : args[index];
 
-      if (value !== __) {
-        --remaining;
+        if (value !== __) {
+          --remaining;
+        }
       }
     }
 
