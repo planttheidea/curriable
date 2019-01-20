@@ -18,7 +18,7 @@ Curry any function with placeholder support
 
 ## Summary
 
-`curriable` provides a `curry` method that is [highly performant](#benchmarks) with a small footprint (_573 bytes minified+gzipped_). You can call the method with any combination of parameters (one at a time, all at once, or any number in between), and placeholders are supported.
+`curriable` provides a `curry` method that is [highly performant](#benchmarks) with a small footprint (_562 bytes minified+gzipped_). You can call the method with any combination of parameters (one at a time, all at once, or any number in between), and placeholders are supported.
 
 If `fn` is the curried function and `_` is the placeholder value, the following are all equivalent:
 
@@ -127,27 +127,27 @@ Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory 
 
 #### Passing each parameter in curried calls
 
-| Library       | Operations / second | Relative margin of error |
-| ------------- | ------------------- | ------------------------ |
-| **curriable** | **3,577,400**       | **1.22%**                |
-| ramda         | 2,327,403           | 1.00%                    |
-| lodash        | 211,666             | 0.62%                    |
+| Library       | Operations / second |
+| ------------- | ------------------- |
+| **curriable** | **4,052,206**       |
+| ramda         | 2,423,105           |
+| lodash        | 241,736             |
 
 #### Passing all parameters in one call
 
-| Library       | Operations / second | Relative margin of error |
-| ------------- | ------------------- | ------------------------ |
-| **curriable** | **17,081,266**      | **0.59%**                |
-| ramda         | 13,347,748          | 0.67%                    |
-| lodash        | 9,398,950           | 0.70%                    |
+| Library       | Operations / second |
+| ------------- | ------------------- |
+| **curriable** | **18,106,685**      |
+| ramda         | 10,718,796          |
+| lodash        | 9,052,257           |
 
 #### Using placeholder parameters in curried calls
 
-| Library       | Operations / second | Relative margin of error |
-| ------------- | ------------------- | ------------------------ |
-| **curriable** | **4,341,722**       | **0.63%**                |
-| ramda         | 2,902,086           | 0.66%                    |
-| lodash        | 280,139             | 0.50%                    |
+| Library       | Operations / second |
+| ------------- | ------------------- |
+| **curriable** | **4,821,329**       |
+| ramda         | 2,963,699           |
+| lodash        | 336,687             |
 
 ## Development
 
