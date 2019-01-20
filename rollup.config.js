@@ -1,5 +1,5 @@
 import typescript from "rollup-plugin-typescript2";
-import minify from "rollup-plugin-babel-minify";
+import { terser } from "rollup-plugin-terser";
 
 import pkg from "./package.json";
 
@@ -49,12 +49,6 @@ export default [
       file: pkg.browser.replace(".js", ".min.js"),
       sourcemap: false
     },
-    plugins: [
-      ...UMD_CONFIG.plugins,
-      minify({
-        comments: false,
-        sourceMap: false
-      })
-    ]
+    plugins: [...UMD_CONFIG.plugins, terser()]
   }
 ];

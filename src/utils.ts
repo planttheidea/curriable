@@ -19,7 +19,7 @@ export const recursiveCurry: Function = (
   fn: Function,
   arity: number,
   args: any[],
-): any =>
+): Function =>
   function () {
     const length: number = args.length;
 
@@ -34,7 +34,7 @@ export const recursiveCurry: Function = (
 
     if (length) {
       for (let index: number = 0; index < length; index++) {
-        value = combined[index] =
+        combined[index] = value =
           args[index] === __ && newArgsIndex < newArgsLength
             ? newArgs[newArgsIndex++]
             : args[index];
@@ -47,9 +47,7 @@ export const recursiveCurry: Function = (
 
     if (newArgsIndex < newArgsLength) {
       for (; newArgsIndex < newArgsLength; newArgsIndex++) {
-        value = newArgs[newArgsIndex];
-
-        combined.push(value);
+        combined[combined.length] = value = newArgs[newArgsIndex];
 
         if (value !== __ && newArgsIndex < arity) {
           --remaining;

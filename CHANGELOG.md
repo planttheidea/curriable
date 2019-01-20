@@ -1,5 +1,9 @@
 # curriable CHANGELOG
 
+## 1.2.5
+
+- Change minifier from `babel-minify` to `terser`
+
 ## 1.2.4
 
 - Refactor under the hood to make performance more consistent across browsers
