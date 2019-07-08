@@ -1,5 +1,3 @@
-type Placeholder = Symbol | number;
-
 type Head<T extends any[]> = T extends [any, ...any[]] ? T[0] : never;
 
 type Tail<T extends any[]> = ((...t: T) => any) extends ((_: any, ...tail: infer TT) => any)
@@ -63,8 +61,6 @@ type CleanedGaps<T extends any[]> = { [K in keyof T]: NonNullable<T[K]> };
 
 type Gaps<T extends any[]> = CleanedGaps<PartialGaps<T>>;
 
-type Handler = (...args: any[]) => any;
-
 type Curry<F extends Handler> = <T extends any[]>(
   ...args: Cast<Cast<T, Gaps<Parameters<F>>>, any[]>
 ) => GapsOf<T, Parameters<F>> extends [any, ...any[]]
@@ -73,12 +69,16 @@ type Curry<F extends Handler> = <T extends any[]>(
     >
   : ReturnType<F>;
 
-type Curried<Fn extends Handler> = Curry<Fn> & {
+export type Placeholder = Symbol | number;
+
+export const __: Placeholder;
+
+export type Handler = (...args: any[]) => any;
+
+export type Curried<Fn extends Handler> = Curry<Fn> & {
   arity: number;
   fn: Fn;
 };
-
-export const __: Placeholder;
 
 export function curry<Fn extends Handler>(fn: Fn): Curried<Fn>;
 export function curry<Fn extends Handler>(fn: Fn, arityOverride: number): Handler;
