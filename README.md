@@ -4,17 +4,19 @@ Curry any function with placeholder support
 
 ## Table of contents
 
-- [Summary](#summary)
-- [Usage](#usage)
-  - [Signature](#signature)
-  - [Rest parameters](#rest-parameters)
-  - [Default parameters](#default-parameters)
-  - [uncurry](#uncurry)
-- [Benchmarks](#benchmarks)
-  - [Passing each parameter in curried calls](#passing-each-parameter-in-curried-calls)
-  - [Passing all parameters in one call](#passing-all-parameters-in-one-call)
-  - [Using placeholder parameters in curried calls](#using-placeholder-parameters-in-curried-calls)
-- [Development](#development)
+- [curriable](#curriable)
+  - [Table of contents](#Table-of-contents)
+  - [Summary](#Summary)
+  - [Usage](#Usage)
+      - [Signature](#Signature)
+      - [Rest parameters](#Rest-parameters)
+      - [Default parameters](#Default-parameters)
+      - [uncurry](#uncurry)
+  - [Benchmarks](#Benchmarks)
+      - [Passing each parameter in curried calls](#Passing-each-parameter-in-curried-calls)
+      - [Passing all parameters in one call](#Passing-all-parameters-in-one-call)
+      - [Using placeholder parameters in curried calls](#Using-placeholder-parameters-in-curried-calls)
+  - [Development](#Development)
 
 ## Summary
 
@@ -159,8 +161,10 @@ Standard stuff, clone the repo and `npm install` dependencies. The npm scripts a
 - `dev` => run webpack dev server to run example app (playground!)
 - `lint` => runs `tslint` against all files in the `src` folder
 - `lint:fix` => runs `lint`, fixing any errors if possible
-- `prepublish` => runs `prepublish:compile`
-- `prepublish:compile` => run `lint`, `flow`, `test:coverage`, `clean`, and `dist`
+- `prepublishOnly` => run `lint`, `typecheck`, `test:coverage`, `clean`, and `dist`
+- `release` => run `release-it` for standard versions (requires global installation of `release-it`)
+- `release:beta` => run `release-it` for beta versions (requires global installation of `release-it`)
 - `test` => run `jest` test functions
 - `test:coverage` => run `test`, but with coverage checker
 - `test:watch` => run `test`, but with persistent watcher
+- `typecheck` => run `tsc` on all code in `src`
