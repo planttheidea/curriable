@@ -1,5 +1,5 @@
 // utils
-import { __, recursiveCurry } from './utils';
+import { __, getCurried } from './utils';
 
 export { __ };
 
@@ -10,22 +10,37 @@ export { __ };
  * get the method passed as a curriable method based on its parameters
  *
  * @param fn the method to make curriable
- * @param arity the arity of the curried method
+ * @param arityOverride the hard-coded arity of the curried method
  * @returns the fn passed as a curried function
  */
-export const curry = (
-  fn: Function,
-  arity: number = fn.length,
-): CurriedFunction => {
-  const curried = recursiveCurry(fn, arity, []);
+export function curry<Fn extends Handler>(fn: Fn): Curried<Fn>;
+export function curry<Fn extends Handler>(fn: Fn, arityOverride: number): Handler;
+export function curry<Fn extends Handler>(fn: Fn, arityOverride?: number) {
+  const arity = typeof arityOverride === 'number' ? arityOverride : fn.length;
+  const curried = getCurried(fn, arity) as Curried<Fn>;
 
   curried.arity = arity;
   curried.fn = fn;
 
   return curried;
-};
+}
 
 curry.__ = __;
+
+/**
+ * @function isPlaceholder
+ *
+ * @description
+ * is the value passed a placeholder
+ *
+ * @param value the value to test
+ * @returns whether the value is a placeholder
+ */
+export function isPlaceholder(value: any): value is Placeholder {
+  return value === __;
+}
+
+curry.isPlaceholder = isPlaceholder;
 
 /**
  * @function uncurry
@@ -36,7 +51,9 @@ curry.__ = __;
  * @param curried the curried function to uncurry
  * @returns the original fn
  */
-export const uncurry = (curried: CurriedFunction): Function => curried.fn;
+export function uncurry<Fn extends Handler>(curried: Curried<Fn>): Fn {
+  return curried.fn;
+}
 
 curry.uncurry = uncurry;
 
