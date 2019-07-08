@@ -83,6 +83,8 @@ export type Curried<Fn extends Handler> = Curry<Fn> & {
 export function curry<Fn extends Handler>(fn: Fn): Curried<Fn>;
 export function curry<Fn extends Handler>(fn: Fn, arityOverride: number): Handler;
 
+export function isPlaceholder(value: any): value is Placeholder;
+
 export function uncurry<Fn extends Handler>(curried: Curried<Fn>): Fn;
 
 export default curry;

@@ -28,6 +28,21 @@ export function curry<Fn extends Handler>(fn: Fn, arityOverride?: number) {
 curry.__ = __;
 
 /**
+ * @function isPlaceholder
+ *
+ * @description
+ * is the value passed a placeholder
+ *
+ * @param value the value to test
+ * @returns whether the value is a placeholder
+ */
+export function isPlaceholder(value: any): value is Placeholder {
+  return value === __;
+}
+
+curry.isPlaceholder = isPlaceholder;
+
+/**
  * @function uncurry
  *
  * @description

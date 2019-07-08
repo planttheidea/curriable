@@ -1,4 +1,4 @@
-import { default as defaultCurry, __, curry, uncurry } from '../src';
+import { default as defaultCurry, __, curry, isPlaceholder, uncurry } from '../src';
 
 describe('exports', () => {
   it('should have all exports present', () => {
@@ -52,6 +52,18 @@ describe('curry', () => {
     const result = partial3(d);
 
     expect(result).toEqual([a, b, c, d]);
+  });
+});
+
+describe('isPlaceholder', () => {
+  it('should return true if the value is a placeholder', () => {
+    expect(isPlaceholder(__)).toBe(true);
+  });
+
+  it('should return false if the value is not a placeholder', () => {
+    const __ = 'something else';
+
+    expect(isPlaceholder(__)).toBe(false);
   });
 });
 

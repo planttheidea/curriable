@@ -8,14 +8,16 @@ Curry any function with placeholder support
   - [Table of contents](#Table-of-contents)
   - [Summary](#Summary)
   - [Usage](#Usage)
-      - [Signature](#Signature)
-      - [Rest parameters](#Rest-parameters)
-      - [Default parameters](#Default-parameters)
+    - [API](#API)
+      - [curry](#curry)
       - [uncurry](#uncurry)
+      - [isPlaceholder](#isPlaceholder)
+    - [Rest parameters](#Rest-parameters)
+    - [Default parameters](#Default-parameters)
   - [Benchmarks](#Benchmarks)
-      - [Passing each parameter in curried calls](#Passing-each-parameter-in-curried-calls)
-      - [Passing all parameters in one call](#Passing-all-parameters-in-one-call)
-      - [Using placeholder parameters in curried calls](#Using-placeholder-parameters-in-curried-calls)
+    - [Passing each parameter in curried calls](#Passing-each-parameter-in-curried-calls)
+    - [Passing all parameters in one call](#Passing-all-parameters-in-one-call)
+    - [Using placeholder parameters in curried calls](#Using-placeholder-parameters-in-curried-calls)
   - [Development](#Development)
 
 ## Summary
@@ -39,7 +41,7 @@ If `fn` is the curried function and `_` is the placeholder value, the following 
 
 You can use the default import:
 
-```javascript
+```ts
 import curry from "curriable";
 
 const fn = curry((a, b, c) => [a, b, c]);
@@ -53,7 +55,7 @@ console.log(original("a")); // ["a", undefined, undefined]
 
 Or the named imports:
 
-```javascript
+```ts
 import { __, curry, uncurry } from "curriable";
 
 const fn = curry((a, b, c) => [a, b, c]);
@@ -65,40 +67,69 @@ const original = uncurry(fn);
 console.log(original("a")); // ["a", undefined, undefined]
 ```
 
-#### Signature
+### API
 
-The `curry` method has the following signature:
+#### curry
 
-```javascript
-function curry(fn: function, arity: number = fn.length) => function;
+Curry the `fn` provided for any combination of arguments passed, until all required arguments have been passed.
+
+```ts
+import { curry } from 'curriable';
+
+function curry<Fn extends (...args: any[]) => any>(
+    fn: Fn, 
+    arity: number = fn.length
+) => Curried<Fn>;
 ```
 
 `arity` defaults to be the length provided by `fn.length`, but be aware this can cause unusual behavior with default parameters or use of rest parameters. [See the documentation on Function.length for more details](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/length).
 
-#### Rest parameters
+#### uncurry
 
-```javascript
-console.log(function(...args) {}.length); // 0 arity computed
+```ts
+import { uncurry } from 'curriable';
+
+Get the underlying standard method that was curried using `curry`.
+
+function uncurry<Fn extends (...args: any[]) => any>(
+    fn: Curried<Fn>
+) => Fn;
+```
+
+#### isPlaceholder
+
+```ts
+import { isPlaceholder } from 'curriable';
+
+Is the value passed a `curriable` placeholder.
+
+function isPlaceholder(value: any): value is Placeholder
+```
+
+### Rest parameters
+
+```ts
+console.log((...args) =>{}.length); // 0 arity computed
 ```
 
 When using rest with curried functions, you should pass a second parameter to explicitly declare the correct `arity`:
 
-```javascript
+```ts
 const fn = (...args) => [a, b, c];
 const curried = curry(fn, 3);
 
 console.log(curried("a")("b")("c")); // ["a", "b", "c"]
 ```
 
-#### Default parameters
+### Default parameters
 
-```javascript
+```ts
 console.log(function(a, b = 1, c) {}.length); // 1 arity computed
 ```
 
 Default parameters are very rare use-case with curried functions, but it is possible to trigger them if you declare an explicit `arity` and explicitly pass `undefined` for that parameter:
 
-```javascript
+```ts
 const fn = (a, b = 1, c) => [a, b, c];
 const curried = curry(fn, 3);
 
@@ -107,27 +138,13 @@ console.log(curried("a")(undefined)("c")); // ["a", 1, "c"]
 
 Yes, this is weird, but it is very difficult (impossible?) to distinguish between a parameter being undefined through not being called yet in the curry chain vs being undefined by not being provided an explicit value. Explicitly passing `undefined` provides that distinction.
 
-#### uncurry
-
-The function `uncurry` is also available on both the default export and as a named export, and this function will return the original (uncurried) `fn` passed to `curry`.
-
-```javascript
-const curried = curry((a, b, c) => [a, b, c]);
-
-console.log(curried("a")); // function() {}
-
-const uncurried = uncurry(fn);
-
-console.log(uncurried("a")); // ["a", undefined, undefined]
-```
-
 ## Benchmarks
 
 All values provided are the number of operations per second (ops/sec) calculated by the [Benchmark suite](https://benchmarkjs.com/). The same function was curried and tested passing each parameter individually, passing all at once, and using placeholders.
 
 Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory using NodeJS version `10.15.0`.
 
-#### Passing each parameter in curried calls
+### Passing each parameter in curried calls
 
 | Library       | Operations / second |
 | ------------- | ------------------- |
@@ -135,7 +152,7 @@ Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory 
 | ramda         | 2,423,105           |
 | lodash        | 241,736             |
 
-#### Passing all parameters in one call
+### Passing all parameters in one call
 
 | Library       | Operations / second |
 | ------------- | ------------------- |
@@ -143,7 +160,7 @@ Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory 
 | ramda         | 10,718,796          |
 | lodash        | 9,052,257           |
 
-#### Using placeholder parameters in curried calls
+### Using placeholder parameters in curried calls
 
 | Library       | Operations / second |
 | ------------- | ------------------- |
