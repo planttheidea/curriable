@@ -1,5 +1,5 @@
 // utils
-import { __, recursiveCurry } from './utils';
+import { __, getCurried } from './utils';
 
 export { __ };
 
@@ -17,7 +17,7 @@ export function curry<Fn extends Handler>(fn: Fn): Curried<Fn>;
 export function curry<Fn extends Handler>(fn: Fn, arityOverride: number): Handler;
 export function curry<Fn extends Handler>(fn: Fn, arityOverride?: number) {
   const arity = typeof arityOverride === 'number' ? arityOverride : fn.length;
-  const curried = recursiveCurry(fn, arity, []) as Curried<Fn>;
+  const curried = getCurried(fn, arity) as Curried<Fn>;
 
   curried.arity = arity;
   curried.fn = fn;

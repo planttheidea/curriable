@@ -15,42 +15,50 @@ export const __: Placeholder =
  * @param args the existing arguments
  * @returns the result of the function call
  */
-export function recursiveCurry<Fn extends Handler>(fn: Fn, arity: number, args: any[]): Curry<Fn> {
-  return function () {
-    const length: number = args.length;
+export function getCurried<Fn extends Handler>(fn: Fn, arity: number): Curry<Fn> {
+  function _curried(args: any[]) {
+    return function () {
+      const length: number = args.length;
 
-    const newArgs: IArguments = arguments;
-    const { length: newArgsLength } = newArgs;
+      const newArgs: IArguments = arguments;
+      const { length: newArgsLength } = newArgs;
 
-    const combined: any[] = [];
+      const combined: any[] = [];
 
-    let newArgsIndex = 0;
-    let remaining = arity;
-    let value: any;
+      let newArgsIndex = 0;
+      let remaining = arity;
+      let value: any;
 
-    if (length) {
-      for (let index = 0; index < length; index++) {
-        combined[index] = value =
-          args[index] === __ && newArgsIndex < newArgsLength
-            ? newArgs[newArgsIndex++]
-            : args[index];
+      if (length) {
+        let index = -1;
 
-        if (value !== __) {
-          --remaining;
+        while (++index < length) {
+          combined[index] = value =
+            args[index] === __ && newArgsIndex < newArgsLength
+              ? newArgs[newArgsIndex++]
+              : args[index];
+
+          if (value !== __) {
+            --remaining;
+          }
         }
       }
-    }
 
-    if (newArgsIndex < newArgsLength) {
-      for (; newArgsIndex < newArgsLength; newArgsIndex++) {
-        combined[combined.length] = value = newArgs[newArgsIndex];
+      if (newArgsIndex < newArgsLength) {
+        while (newArgsIndex < newArgsLength) {
+          combined[combined.length] = value = newArgs[newArgsIndex];
 
-        if (value !== __ && newArgsIndex < arity) {
-          --remaining;
+          if (value !== __ && newArgsIndex < arity) {
+            --remaining;
+          }
+
+          ++newArgsIndex;
         }
       }
-    }
 
-    return remaining > 0 ? recursiveCurry(fn, arity, combined) : fn.apply(this, combined);
-  };
+      return remaining > 0 ? _curried(combined) : fn.apply(this, combined);
+    };
+  }
+
+  return _curried([]);
 }

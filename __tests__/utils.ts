@@ -1,10 +1,10 @@
-import { __, recursiveCurry } from '../src/utils';
+import { __, getCurried } from '../src/utils';
 
 const fn = (foo: string, bar: string, baz: string): string[] => [foo, bar, baz];
 
-const standard = recursiveCurry(fn, fn.length, []);
+const standard = getCurried(fn, fn.length);
 
-describe('recursiveCurry - derived arity', () => {
+describe('getCurried - derived arity', () => {
   it('should handle all arguments passed on first call', () => {
     const result = standard('foo', 'bar', 'baz');
 
@@ -42,9 +42,9 @@ describe('recursiveCurry - derived arity', () => {
   });
 });
 
-const limited = recursiveCurry(fn, 2, []);
+const limited = getCurried(fn, 2);
 
-describe('recursiveCurry - limited arity', () => {
+describe('getCurried - limited arity', () => {
   it('should handle all arguments passed on first call', () => {
     const result = limited('foo', 'bar', 'baz');
 
@@ -72,9 +72,9 @@ describe('recursiveCurry - limited arity', () => {
 
 const restFn = (...args: any[]): any => [].slice.call(args);
 
-const rest = recursiveCurry(restFn, 3, []);
+const rest = getCurried(restFn, 3);
 
-describe('recursiveCurry - limited arity', () => {
+describe('getCurried - limited arity', () => {
   it('should handle all arguments passed on first call', () => {
     const result = rest('foo', 'bar', 'baz');
 
