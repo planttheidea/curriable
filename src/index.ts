@@ -1,60 +1,72 @@
-// utils
-import { __, getCurried } from './utils';
+import type { Curried } from './internalTypes.js';
+import { __ } from './placeholder.js';
 
-export { __ };
+export { __, isPlaceholder } from './placeholder.js';
 
 /**
- * @function curry
- *
- * @description
- * get the method passed as a curriable method based on its parameters
- *
- * @param fn the method to make curriable
- * @param arityOverride the hard-coded arity of the curried method
- * @returns the fn passed as a curried function
+ * Get the method passed as a curriable method based on its parameters
  */
-export function curry<Fn extends Handler>(fn: Fn): Curried<Fn>;
-export function curry<Fn extends Handler>(fn: Fn, arityOverride: number): Handler;
-export function curry<Fn extends Handler>(fn: Fn, arityOverride?: number) {
+export function curry<Fn extends (...args: any[]) => any, Arity extends number>(
+  fn: Fn,
+  arityOverride?: Arity,
+): Curried<Fn, Arity> {
   const arity = typeof arityOverride === 'number' ? arityOverride : fn.length;
-  const curried = getCurried(fn, arity) as Curried<Fn>;
+  const curried = (function (...initialArgs: any[]) {
+    return function (this: any, ...nextArgs: any[]) {
+      const length: number = initialArgs.length;
+      const newArgsLength = nextArgs.length;
 
-  curried.arity = arity;
+      const combined: any[] = [];
+
+      let newArgsIndex = 0;
+      let remaining = arity;
+      let value: any;
+
+      if (length) {
+        let index = -1;
+
+        while (++index < length) {
+          combined[index] = value =
+            initialArgs[index] === __ && newArgsIndex < newArgsLength ? nextArgs[newArgsIndex++] : initialArgs[index];
+
+          if (value !== __) {
+            --remaining;
+          }
+        }
+      }
+
+      if (newArgsIndex < newArgsLength) {
+        while (newArgsIndex < newArgsLength) {
+          combined[combined.length] = value = nextArgs[newArgsIndex];
+
+          if (value !== __ && newArgsIndex < arity) {
+            --remaining;
+          }
+
+          ++newArgsIndex;
+        }
+      }
+
+      return remaining > 0
+        ? curried(
+            // @ts-expect-error - Allow passing `any[]` to avoid surfacing internal types.
+            combined,
+          )
+        : fn.apply(this, combined);
+    };
+  })([]) as Curried<Fn, Arity>;
+
+  curried.arity = arity as Arity;
   curried.fn = fn;
 
   return curried;
 }
 
-curry.__ = __;
-
 /**
- * @function isPlaceholder
- *
- * @description
- * is the value passed a placeholder
- *
- * @param value the value to test
- * @returns whether the value is a placeholder
+ * Return a function that is the non-curried version of the fn passed.
  */
-export function isPlaceholder(value: any): value is Placeholder {
-  return value === __;
-}
-
-curry.isPlaceholder = isPlaceholder;
-
-/**
- * @function uncurry
- *
- * @description
- * return a function that is the non-curried version of the fn passed
- *
- * @param curried the curried function to uncurry
- * @returns the original fn
- */
-export function uncurry<Fn extends Handler>(curried: Curried<Fn>): Fn {
+export function uncurry<CurriedFn extends Curried<(...args: any[]) => any, number>>(
+  curried: CurriedFn,
+): CurriedFn['fn'] {
   return curried.fn;
 }
-
-curry.uncurry = uncurry;
-
-export default curry;

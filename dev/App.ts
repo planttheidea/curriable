@@ -22,14 +22,19 @@ console.group('limited arity');
 const curriedLimitedFn = curry(fn, 2);
 
 console.log(curriedLimitedFn('foo', 'bar'));
+// @ts-expect-error - Allow passing extra parameters to test they are ignored.
 console.log(curriedLimitedFn('foo', 'bar', 'baz'));
 console.log(curriedLimitedFn('foo')('bar'));
+// @ts-expect-error - Allow passing extra parameters to test they are ignored.
 console.log(curriedLimitedFn('foo')('bar', 'baz'));
 console.log(curriedLimitedFn('foo', __)('bar'));
+// @ts-expect-error - Allow passing extra parameters to test they are ignored.
 console.log(curriedLimitedFn('foo', __)('bar', 'baz'));
 console.log(curriedLimitedFn(__)('foo')('bar'));
+// @ts-expect-error - Allow passing extra parameters to test they are ignored.
 console.log(curriedLimitedFn(__)('foo')('bar', 'baz'));
 console.log(curriedLimitedFn(__, __)(__)('foo')(__)('bar'));
+// @ts-expect-error - Allow passing extra parameters to test they are ignored.
 console.log(curriedLimitedFn(__, __)(__)('foo')(__)('bar', 'baz'));
 
 console.groupEnd();
@@ -46,9 +51,6 @@ console.groupEnd();
 
 console.group('uncurried');
 
-console.log(uncurriedFn('foo'));
-console.log(uncurriedFn('foo', 'bar'));
 console.log(uncurriedFn('foo', 'bar', 'baz'));
-console.log(uncurriedFn('foo', 'bar', 'baz', 'quz'));
 
 console.groupEnd();
