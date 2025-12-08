@@ -1,8 +1,7 @@
 /**
  * @constant __ placeholder used when parameters are skipped
  */
-export const __: Placeholder =
-  typeof Symbol === 'function' ? Symbol('curriable placeholder') : 0xedd1;
+export const __: Placeholder = typeof Symbol === 'function' ? Symbol('curriable placeholder') : 0xedd1;
 
 /**
  * @function recursiveCurry
@@ -34,9 +33,7 @@ export function getCurried<Fn extends Handler>(fn: Fn, arity: number): Curry<Fn>
 
         while (++index < length) {
           combined[index] = value =
-            args[index] === __ && newArgsIndex < newArgsLength
-              ? newArgs[newArgsIndex++]
-              : args[index];
+            args[index] === __ && newArgsIndex < newArgsLength ? newArgs[newArgsIndex++] : args[index];
 
           if (value !== __) {
             --remaining;

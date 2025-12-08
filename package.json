@@ -1,6 +1,6 @@
 {
   "author": "tony_quetano@planttheidea.com",
-  "browser": "dist/curriable.js",
+  "browser": "dist/umd/index.js",
   "browserslist": [
     "defaults",
     "Explorer >= 9",
@@ -14,37 +14,53 @@
   },
   "description": "Convert any method to be curriable with placeholder support",
   "devDependencies": {
-    "@types/jest": "^24.0.15",
+    "@planttheidea/build-tools": "^1.2.3",
+    "@vitest/coverage-v8": "^4.0.15",
     "benchee": "^1.1.0",
-    "cli-table": "^0.3.1",
-    "cli-table2": "^0.2.0",
-    "html-webpack-plugin": "^3.2.0",
-    "jest": "^24.8.0",
+    "eslint": "^9.39.1",
     "lodash": "^4.17.10",
     "ora": "^3.4.0",
     "performance-now": "^2.1.0",
+    "prettier": "^3.7.4",
     "ramda": "^0.26.1",
-    "rollup": "^1.16.6",
-    "rollup-plugin-terser": "^5.1.1",
-    "rollup-plugin-typescript2": "^0.21.2",
-    "ts-jest": "^24.0.2",
-    "ts-loader": "^6.0.4",
-    "tslint": "^5.18.0",
-    "tslint-config-airbnb": "^5.11.0",
-    "tslint-loader": "^3.5.4",
-    "typescript": "^3.5.2",
-    "webpack": "^4.35.2",
-    "webpack-cli": "^3.3.5",
-    "webpack-dev-server": "^3.7.2"
+    "release-it": "^19.0.6",
+    "rollup": "^4.53.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.7",
+    "vitest": "^4.0.15"
   },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/es/index.d.mts",
+        "default": "./dist/es/index.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.cts",
+        "default": "./dist/cjs/index.cjs"
+      },
+      "default": {
+        "types": "./dist/umd/index.d.ts",
+        "default": "./dist/umd/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "index.d.ts",
+    "package.json"
+  ],
+  "homepage": "https://github.com/planttheidea/curriable#readme",
   "keywords": [
     "curry",
     "functional"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/planttheidea/curriable#readme",
-  "main": "dist/curriable.cjs.js",
-  "module": "dist/curriable.esm.js",
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/es/index.mjs",
   "name": "curriable",
   "repository": {
     "type": "git",
@@ -52,21 +68,28 @@
   },
   "scripts": {
     "benchmark": "rimraf dist && npm run build && node ./benchmarks/index.js",
-    "build": "NODE_ENV=production rollup -c",
-    "clean": "rimraf dist",
-    "dev": "NODE_ENV=development webpack-dev-server --progress --colors --config=webpack/webpack.config.js",
-    "lint": "NODE_ENV=test tslint 'src/*.ts'",
+    "build": "npm run clean && npm run build:dist && npm run build:types",
+    "build:dist": "NODE_ENV=production rollup -c config/rollup.config.js",
+    "build:types": "pti fix-types -l dist",
+    "clean": "rm -rf dist",
+    "clean:cjs": "rm -rf dist/cjs",
+    "clean:es": "rm -rf dist/es",
+    "dev": "vite --config=config/vite.config.ts",
+    "format": "prettier . --log-level=warn --write",
+    "format:check": "prettier . --log-level=warn --check",
+    "lint": "eslint --max-warnings=0",
     "lint:fix": "npm run lint -- --fix",
-    "prepublishOnly": "npm run lint && npm run typecheck && npm run test:coverage && npm run clean && npm run build",
-    "release": "release-it",
-    "release:beta": "release-it --config=.release-it.beta.json",
+    "release:alpha": "release-it --config=config/release-it/alpha.json",
+    "release:beta": "release-it --config=config/release-it/beta.json",
+    "release:rc": "release-it --config=config/release-it/rc.json",
+    "release:scripts": "npm run format:check && npm run typecheck && npm run lint && npm run test && npm run build",
+    "release:stable": "release-it --config=config/release-it/stable.json",
     "start": "npm run dev",
-    "test": "NODE_PATH=. jest",
-    "test:coverage": "npm run test -- --coverage",
-    "test:watch": "npm run test -- --watch",
+    "test": "vitest run --config=config/vitest.config.ts",
     "typecheck": "tsc --noEmit"
   },
   "sideEffects": false,
-  "types": "index.d.ts",
+  "type": "module",
+  "types": "./index.d.ts",
   "version": "1.3.0"
 }

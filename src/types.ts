@@ -2,11 +2,9 @@ type Placeholder = Symbol | number;
 
 type Head<T extends any[]> = T extends [any, ...any[]] ? T[0] : never;
 
-type Tail<T extends any[]> = ((...t: T) => any) extends ((_: any, ...tail: infer TT) => any)
-  ? TT
-  : [];
+type Tail<T extends any[]> = ((...t: T) => any) extends (_: any, ...tail: infer TT) => any ? TT : [];
 
-type HasTail<T extends any[]> = T extends ([] | [any]) ? false : true;
+type HasTail<T extends any[]> = T extends [] | [any] ? false : true;
 
 type Last<T extends any[]> = {
   0: Last<Tail<T>>;
@@ -15,11 +13,7 @@ type Last<T extends any[]> = {
 
 type Length<T extends any[]> = T['length'];
 
-type Prepend<E, T extends any[]> = ((head: E, ...args: T) => any) extends ((
-  ...args: infer U
-) => any)
-  ? U
-  : T;
+type Prepend<E, T extends any[]> = ((head: E, ...args: T) => any) extends (...args: infer U) => any ? U : T;
 
 type Drop<N extends number, T extends any[], I extends any[] = []> = {
   0: Drop<N, Tail<T>, Prepend<any, I>>;
@@ -39,16 +33,11 @@ type Reverse<T extends any[], R extends any[] = [], I extends any[] = []> = {
   1: R;
 }[Pos<I> extends Length<T> ? 1 : 0];
 
-type Concat<T1 extends any[], T2 extends any[]> = Reverse<
-  Reverse<T1> extends infer R ? Cast<R, any[]> : never,
-  T2
->;
+type Concat<T1 extends any[], T2 extends any[]> = Reverse<Reverse<T1> extends infer R ? Cast<R, any[]> : never, T2>;
 
 type Append<E, T extends any[]> = Concat<T, [E]>;
 
-type GapOf<T1 extends any[], T2 extends any[], TN extends any[], I extends any[]> = T1[Pos<
-  I
->] extends Placeholder
+type GapOf<T1 extends any[], T2 extends any[], TN extends any[], I extends any[]> = T1[Pos<I>] extends Placeholder
   ? Append<T2[Pos<I>], TN>
   : TN;
 
@@ -68,9 +57,7 @@ type Handler = (...args: any[]) => any;
 type Curry<F extends Handler> = <T extends any[]>(
   ...args: Cast<Cast<T, Gaps<Parameters<F>>>, any[]>
 ) => GapsOf<T, Parameters<F>> extends [any, ...any[]]
-  ? Curry<
-      (...args: GapsOf<T, Parameters<F>> extends infer G ? Cast<G, any[]> : never) => ReturnType<F>
-    >
+  ? Curry<(...args: GapsOf<T, Parameters<F>> extends infer G ? Cast<G, any[]> : never) => ReturnType<F>>
   : ReturnType<F>;
 
 type Curried<Fn extends Handler> = Curry<Fn> & {
