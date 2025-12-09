@@ -1,5 +1,5 @@
 export const enum Placeholder {
-  Value = '<<PLACEHOLDER>>',
+  Value = '<<\u200bCURRIABLE PLACEHOLDER\u200b>>',
 }
 
 export const __ = Placeholder.Value;

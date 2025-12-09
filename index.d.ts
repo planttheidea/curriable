@@ -1,5 +1,5 @@
 declare const enum Placeholder {
-  Value = '<<PLACEHOLDER>>',
+  Value = '<<\u200BCURRIABLE PLACEHOLDER\u200B>>',
 }
 declare const __ = Placeholder.Value;
 /**
