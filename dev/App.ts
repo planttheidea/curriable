@@ -20,8 +20,9 @@ console.groupEnd();
 console.group('limited arity');
 
 const curriedLimitedFn = curry(fn, 2);
+const result = curriedLimitedFn('foo', 'bar');
 
-console.log(curriedLimitedFn('foo', 'bar'));
+console.log(result);
 // @ts-expect-error - Allow passing extra parameters to test they are ignored.
 console.log(curriedLimitedFn('foo', 'bar', 'baz'));
 console.log(curriedLimitedFn('foo')('bar'));
@@ -41,11 +42,13 @@ console.groupEnd();
 
 console.group('rest arity');
 
-const restFn = (...args: any[]) => args;
+const restFn = (...args: any[]) => [[args[0]]] as const;
 
 const curriedRestFn = curry(restFn, 3);
+const curriedRestResult = curriedRestFn('foo')('bar');
 
-console.log(curriedRestFn('foo')('bar')('baz'));
+console.log(curriedRestFn('foo')('bar'));
+console.log(curriedRestResult('foo')('bar'));
 
 console.groupEnd();
 

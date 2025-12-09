@@ -1,5 +1,9 @@
 import type { Placeholder } from './placeholder.js';
 
+type TupleOf<S extends number, V = undefined, A extends unknown[] = []> = S extends A['length']
+  ? A
+  : TupleOf<S, V, [...A, V]>;
+
 export type TupleLength<A extends unknown[]> = A extends unknown
   ? number extends A['length']
     ? never
@@ -29,6 +33,14 @@ type RemainingParameters<AppliedParams extends unknown[], ExpectedParams extends
       : RemainingParameters<ATail, ETail>
     : []
   : ExpectedParams;
+
+export type NormalizeFn<Fn extends (...args: any[]) => any, Arity extends number> = Fn extends (
+  ...args: infer Args
+) => infer Result
+  ? number extends Parameters<Fn>['length']
+    ? (...args: TupleOf<Arity, Args[number]>) => Result
+    : Fn
+  : Fn;
 
 export type CurriedFn<Fn extends (...args: any[]) => any, Arity extends number> = <
   AppliedParams extends RequiredFirstParam<Fn, Arity>,

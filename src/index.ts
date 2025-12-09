@@ -1,4 +1,4 @@
-import type { Curried } from './internalTypes.js';
+import type { Curried, NormalizeFn } from './internalTypes.js';
 import { __ } from './placeholder.js';
 
 export { __, isPlaceholder } from './placeholder.js';
@@ -6,10 +6,10 @@ export { __, isPlaceholder } from './placeholder.js';
 /**
  * Get the method passed as a curriable method based on its parameters
  */
-export function curry<Fn extends (...args: any[]) => any, Arity extends number>(
+export function curry<Fn extends (...args: any[]) => any, Arity extends number = Parameters<Fn>['length']>(
   fn: Fn,
   arityOverride?: Arity,
-): Curried<Fn, Arity> {
+): number extends Arity ? never : Curried<NormalizeFn<Fn, Arity>, Arity> {
   const arity = typeof arityOverride === 'number' ? arityOverride : fn.length;
   const curried = (function (...initialArgs: any[]) {
     return function (this: any, ...nextArgs: any[]) {
