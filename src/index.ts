@@ -7,7 +7,7 @@ function createCurried<Fn extends (...args: any[]) => any, Arity extends number>
   fn: Fn,
   arity: Arity,
 ): CurriedFn<Fn, Arity> {
-  const curried = function (...initialArgs: any[]) {
+  const curried = function (initialArgs: any[]) {
     return function (this: any, ...nextArgs: any[]): any {
       const length: number = initialArgs.length;
       const newArgsLength = nextArgs.length;
