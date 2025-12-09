@@ -1,5 +1,12 @@
 # curriable CHANGELOG
 
+## 2.0.0
+
+### Breaking changes
+
+- Module is now ESM (`"type": "module"`)
+- `isPlaceholder` utility has been removed
+
 ## 1.2.5
 
 - Change minifier from `babel-minify` to `terser`
