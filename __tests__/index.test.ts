@@ -139,7 +139,7 @@ describe('isPlaceholder', () => {
 
 describe('uncurry', () => {
   test('makes a curried function uncurried', () => {
-    const method = (a: string, b?: string): string[] => [a, b];
+    const method = (a: string, b?: string): Array<string | undefined> => [a, b];
 
     const curried = curry(method);
     const uncurried = uncurry(curried);

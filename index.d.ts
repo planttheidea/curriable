@@ -1,77 +1,74 @@
-type Head<T extends any[]> = T extends [any, ...any[]] ? T[0] : never;
+declare const enum Placeholder {
+  Value = '<<PLACEHOLDER>>',
+}
+declare const __ = Placeholder.Value;
+/**
+ * Whether the value passed is a placeholder.
+ */
+declare function isPlaceholder(value: any): value is Placeholder;
 
-type Tail<T extends any[]> = ((...t: T) => any) extends (_: any, ...tail: infer TT) => any ? TT : [];
-
-type HasTail<T extends any[]> = T extends [] | [any] ? false : true;
-
-type Last<T extends any[]> = {
-  0: Last<Tail<T>>;
-  1: Head<T>;
-}[HasTail<T> extends true ? 0 : 1];
-
-type Length<T extends any[]> = T['length'];
-
-type Prepend<E, T extends any[]> = ((head: E, ...args: T) => any) extends (...args: infer U) => any ? U : T;
-
-type Drop<N extends number, T extends any[], I extends any[] = []> = {
-  0: Drop<N, Tail<T>, Prepend<any, I>>;
-  1: T;
-}[Length<I> extends N ? 1 : 0];
-
-type Cast<X, Y> = X extends Y ? X : Y;
-
-type Pos<I extends any[]> = Length<I>;
-
-type Next<I extends any[]> = Prepend<any, I>;
-
-type Prev<I extends any[]> = Tail<I>;
-
-type Reverse<T extends any[], R extends any[] = [], I extends any[] = []> = {
-  0: Reverse<T, Prepend<T[Pos<I>], R>, Next<I>>;
-  1: R;
-}[Pos<I> extends Length<T> ? 1 : 0];
-
-type Concat<T1 extends any[], T2 extends any[]> = Reverse<Reverse<T1> extends infer R ? Cast<R, any[]> : never, T2>;
-
-type Append<E, T extends any[]> = Concat<T, [E]>;
-
-type GapOf<T1 extends any[], T2 extends any[], TN extends any[], I extends any[]> = T1[Pos<I>] extends Placeholder
-  ? Append<T2[Pos<I>], TN>
-  : TN;
-
-type GapsOf<T1 extends any[], T2 extends any[], TN extends any[] = [], I extends any[] = []> = {
-  0: GapsOf<T1, T2, GapOf<T1, T2, TN, I> extends infer G ? Cast<G, any[]> : never, Next<I>>;
-  1: Concat<TN, Drop<Pos<I>, T2> extends infer D ? Cast<D, any[]> : never>;
-}[Pos<I> extends Length<T1> ? 1 : 0];
-
-type PartialGaps<T extends any[]> = { [K in keyof T]?: T[K] | Placeholder };
-
-type CleanedGaps<T extends any[]> = { [K in keyof T]: NonNullable<T[K]> };
-
-type Gaps<T extends any[]> = CleanedGaps<PartialGaps<T>>;
-
-type Curry<F extends Handler> = <T extends any[]>(
-  ...args: Cast<Cast<T, Gaps<Parameters<F>>>, any[]>
-) => GapsOf<T, Parameters<F>> extends [any, ...any[]]
-  ? Curry<(...args: GapsOf<T, Parameters<F>> extends infer G ? Cast<G, any[]> : never) => ReturnType<F>>
-  : ReturnType<F>;
-
-export type Placeholder = Symbol | number;
-
-export const __: Placeholder;
-
-export type Handler = (...args: any[]) => any;
-
-export type Curried<Fn extends Handler> = Curry<Fn> & {
-  arity: number;
+type TupleOf<S extends number, V = undefined, A extends unknown[] = []> = S extends A['length']
+  ? A
+  : TupleOf<S, V, [...A, V]>;
+type TupleLength<A extends unknown[]> = A extends unknown ? (number extends A['length'] ? never : A['length']) : never;
+type DefaultableParams<Params extends unknown[], Arity extends number, Defaultable extends unknown[] = []> =
+  Initial<Params, Arity> extends [infer H, ...infer T]
+    ? DefaultableParams<T, Arity, [...Defaultable, H | Placeholder]>
+    : Defaultable;
+type Initial<A extends unknown[], S extends number, I extends unknown[] = []> =
+  S extends TupleLength<I> ? I : A extends [infer H, ...infer T] ? Initial<T, S, [...I, H]> : I;
+type RequiredFirstParam<Fn extends (...args: any[]) => any, Arity extends number> =
+  Initial<Parameters<Fn>, Arity> extends [infer Head, ...infer Tail]
+    ? [Head | Placeholder.Value, ...Partial<Tail>]
+    : [];
+type RemainingParameters<AppliedParams extends unknown[], ExpectedParams extends unknown[]> = AppliedParams extends [
+  infer AHead,
+  ...infer ATail,
+]
+  ? ExpectedParams extends [infer EHead, ...infer ETail]
+    ? AHead extends Placeholder.Value
+      ? [EHead, ...RemainingParameters<ATail, ETail>]
+      : RemainingParameters<ATail, ETail>
+    : []
+  : ExpectedParams;
+type NormalizeFn<Fn extends (...args: any[]) => any, Arity extends number> = Fn extends (
+  ...args: infer Args
+) => infer Result
+  ? number extends Parameters<Fn>['length']
+    ? (...args: TupleOf<Arity, Args[number]>) => Result
+    : Fn
+  : Fn;
+type CurriedFn<Fn extends (...args: any[]) => any, Arity extends number> = <
+  AppliedParams extends RequiredFirstParam<Fn, Arity>,
+>(
+  ...args: [...AppliedParams, ...extraArgs: unknown[]]
+) => RemainingParameters<AppliedParams, Initial<Parameters<Fn>, Arity>> extends [unknown, ...unknown[]]
+  ? CurriedFn<
+      (...args: RemainingParameters<AppliedParams, DefaultableParams<Parameters<Fn>, Arity>>) => ReturnType<Fn>,
+      Arity
+    >
+  : ReturnType<Fn>;
+type Curried<
+  Fn extends (...args: any[]) => any,
+  NormalizedFn extends (...args: any[]) => any,
+  Arity extends number = TupleLength<Parameters<Fn>>,
+> = CurriedFn<NormalizedFn, Arity> & {
+  arity: Arity;
   fn: Fn;
 };
 
-export function curry<Fn extends Handler>(fn: Fn): Curried<Fn>;
-export function curry<Fn extends Handler>(fn: Fn, arityOverride: number): Handler;
+/**
+ * Get the method passed as a curriable method based on its parameters
+ */
+declare function curry<Fn extends (...args: any[]) => any, Arity extends number = Parameters<Fn>['length']>(
+  fn: Fn,
+  arityOverride?: Arity,
+): number extends Arity ? never : Curried<Fn, NormalizeFn<Fn, Arity>, Arity>;
+/**
+ * Return a function that is the non-curried version of the fn passed.
+ */
+declare function uncurry<CurriedFn extends Curried<(...args: any[]) => any, (...args: any[]) => any, number>>(
+  curried: CurriedFn,
+): CurriedFn['fn'];
 
-export function isPlaceholder(value: any): value is Placeholder;
-
-export function uncurry<Fn extends Handler>(curried: Curried<Fn>): Fn;
-
-export default curry;
+export { __, curry, isPlaceholder, uncurry };

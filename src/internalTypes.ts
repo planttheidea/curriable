@@ -41,7 +41,7 @@ export type NormalizeFn<Fn extends (...args: any[]) => any, Arity extends number
 export type CurriedFn<Fn extends (...args: any[]) => any, Arity extends number> = <
   AppliedParams extends RequiredFirstParam<Fn, Arity>,
 >(
-  ...args: AppliedParams
+  ...args: [...AppliedParams, ...extraArgs: unknown[]]
 ) => RemainingParameters<AppliedParams, Initial<Parameters<Fn>, Arity>> extends [unknown, ...unknown[]]
   ? CurriedFn<
       (...args: RemainingParameters<AppliedParams, DefaultableParams<Parameters<Fn>, Arity>>) => ReturnType<Fn>,

@@ -23,19 +23,14 @@ const curriedLimitedFn = curry(fn, 2);
 const result = curriedLimitedFn('foo', 'bar');
 
 console.log(result);
-// @ts-expect-error - Allow passing extra parameters to test they are ignored.
 console.log(curriedLimitedFn('foo', 'bar', 'baz'));
 console.log(curriedLimitedFn('foo')('bar'));
-// @ts-expect-error - Allow passing extra parameters to test they are ignored.
 console.log(curriedLimitedFn('foo')('bar', 'baz'));
 console.log(curriedLimitedFn('foo', __)('bar'));
-// @ts-expect-error - Allow passing extra parameters to test they are ignored.
 console.log(curriedLimitedFn('foo', __)('bar', 'baz'));
 console.log(curriedLimitedFn(__)('foo')('bar'));
-// @ts-expect-error - Allow passing extra parameters to test they are ignored.
 console.log(curriedLimitedFn(__)('foo')('bar', 'baz'));
 console.log(curriedLimitedFn(__, __)(__)('foo')(__)('bar'));
-// @ts-expect-error - Allow passing extra parameters to test they are ignored.
 console.log(curriedLimitedFn(__, __)(__)('foo')(__)('bar', 'baz'));
 
 console.groupEnd();
