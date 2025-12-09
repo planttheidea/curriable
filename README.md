@@ -5,20 +5,20 @@ Curry any function with placeholder support
 ## Table of contents
 
 - [curriable](#curriable)
-  - [Table of contents](#Table-of-contents)
-  - [Summary](#Summary)
-  - [Usage](#Usage)
-    - [API](#API)
+  - [Table of contents](#table-of-contents)
+  - [Summary](#summary)
+  - [Usage](#usage)
+    - [API](#api)
       - [curry](#curry)
       - [uncurry](#uncurry)
-      - [isPlaceholder](#isPlaceholder)
-    - [Rest parameters](#Rest-parameters)
-    - [Default parameters](#Default-parameters)
-  - [Benchmarks](#Benchmarks)
-    - [Passing each parameter in curried calls](#Passing-each-parameter-in-curried-calls)
-    - [Passing all parameters in one call](#Passing-all-parameters-in-one-call)
-    - [Using placeholder parameters in curried calls](#Using-placeholder-parameters-in-curried-calls)
-  - [Development](#Development)
+      - [isPlaceholder](#isplaceholder)
+    - [Rest parameters](#rest-parameters)
+    - [Default parameters](#default-parameters)
+    - [Generics](#generics)
+  - [Benchmarks](#benchmarks)
+    - [Passing each parameter in curried calls](#passing-each-parameter-in-curried-calls)
+    - [Passing all parameters in one call](#passing-all-parameters-in-one-call)
+    - [Using placeholder parameters in curried calls](#using-placeholder-parameters-in-curried-calls)
 
 ## Summary
 
@@ -113,7 +113,7 @@ function isPlaceholder(value: any): value is Placeholder
 ### Rest parameters
 
 ```ts
-console.log((...args) =>{}.length); // 0 arity computed
+console.log((...args) => args.length); // 0 arity computed
 ```
 
 When using rest with curried functions, you should pass a second parameter to explicitly declare the correct `arity`:
@@ -135,15 +135,37 @@ Default parameters are very rare use-case with curried functions, but it is poss
 explicit `arity` and explicitly pass `undefined` for that parameter:
 
 ```ts
-const fn = (a, b = 1, c) => [a, b, c];
+const fn = (a, b, c = 1) => [a, b, c];
 const curried = curry(fn, 3);
 
-console.log(curried('a')(undefined)('c')); // ["a", 1, "c"]
+console.log(curried('a')('b')(undefined)); // ["a", "b", 1]
 ```
 
 Yes, this is weird, but it is very difficult (impossible?) to distinguish between a parameter being undefined through
 not being called yet in the curry chain vs being undefined by not being provided an explicit value. Explicitly passing
 `undefined` provides that distinction.
+
+Another option is to keep the arity limited and pass the value as an extra argument to the final curried method:
+
+```ts
+const fn = (a, b, c = 1) => [a, b, c];
+const curried = curry(fn);
+
+console.log(curried('a')('b', 5)); // ["a", "b", 5]
+```
+
+### Generics
+
+`curriable` will produce a new function that can extra the arguments and return value from the function passed, however
+a known gap in TS is that doing so will widen any types narrowed by the use of generics.
+
+```ts
+const fn = <T extends number | string>(t: T, exact: boolean): T;
+const curried = curry(fn);
+const foo = curried('foo')(true); // `foo` is `number|string` instead of just `string`
+```
+
+This is intrinsic to TS as a language, so unfortunately it cannot be avoided.
 
 ## Benchmarks
 
@@ -176,21 +198,3 @@ Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory 
 | **curriable** | **4,821,329**       |
 | ramda         | 2,963,699           |
 | lodash        | 336,687             |
-
-## Development
-
-Standard stuff, clone the repo and `npm install` dependencies. The npm scripts available:
-
-- `benchmark` => run the benchmark suite pitting `curriable` against other libraries in common use-cases
-- `build` => run `rollup` to build `dist` files
-- `clean` => run `rimraf` on the `dist` folder
-- `dev` => run webpack dev server to run example app (playground!)
-- `lint` => runs `tslint` against all files in the `src` folder
-- `lint:fix` => runs `lint`, fixing any errors if possible
-- `prepublishOnly` => run `lint`, `typecheck`, `test:coverage`, `clean`, and `dist`
-- `release` => run `release-it` for standard versions (requires global installation of `release-it`)
-- `release:beta` => run `release-it` for beta versions (requires global installation of `release-it`)
-- `test` => run `jest` test functions
-- `test:coverage` => run `test`, but with coverage checker
-- `test:watch` => run `test`, but with persistent watcher
-- `typecheck` => run `tsc` on all code in `src`
