@@ -1,17 +1,5 @@
-import { __, curry, uncurry } from '../src';
-
-document.body.style.backgroundColor = '#1d1d1d';
-document.body.style.color = '#d5d5d5';
-document.body.style.margin = '0px';
-document.body.style.padding = '0px';
-
-const div = document.createElement('div');
-
-div.textContent = 'Check the console for details.';
-
-document.body.appendChild(div);
-
-// import '../benchmarks';
+import { __, curry, uncurry } from '../src/index.js';
+// import '../benchmarks/index.js';
 
 const fn = (foo: string, bar: string, baz: string): string[] => [foo, bar, baz];
 
@@ -32,8 +20,9 @@ console.groupEnd();
 console.group('limited arity');
 
 const curriedLimitedFn = curry(fn, 2);
+const result = curriedLimitedFn('foo', 'bar');
 
-console.log(curriedLimitedFn('foo', 'bar'));
+console.log(result);
 console.log(curriedLimitedFn('foo', 'bar', 'baz'));
 console.log(curriedLimitedFn('foo')('bar'));
 console.log(curriedLimitedFn('foo')('bar', 'baz'));
@@ -48,19 +37,21 @@ console.groupEnd();
 
 console.group('rest arity');
 
-const restFn = (...args: any[]) => args;
+const restFn = (...args: any[]) => [[args[0]]] as const;
 
 const curriedRestFn = curry(restFn, 3);
+const curriedRestResult = curriedRestFn('foo')('bar');
 
-console.log(curriedRestFn('foo')('bar')('baz'));
+console.log(curriedRestFn('foo')('bar'));
+console.log(curriedRestResult('baz'));
 
 console.groupEnd();
 
 console.group('uncurried');
 
-console.log(uncurriedFn('foo'));
-console.log(uncurriedFn('foo', 'bar'));
+const uncurriedRestFn = uncurry(curriedRestFn);
+
 console.log(uncurriedFn('foo', 'bar', 'baz'));
-console.log(uncurriedFn('foo', 'bar', 'baz', 'quz'));
+console.log(uncurriedRestFn('foo', 'bar', 'baz'));
 
 console.groupEnd();
