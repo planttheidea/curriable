@@ -48,7 +48,7 @@ const curriedRestFn = curry(restFn, 3);
 const curriedRestResult = curriedRestFn('foo')('bar');
 
 console.log(curriedRestFn('foo')('bar'));
-console.log(curriedRestResult('foo')('bar'));
+console.log(curriedRestResult('baz'));
 
 console.groupEnd();
 

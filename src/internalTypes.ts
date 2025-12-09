@@ -28,7 +28,7 @@ type RemainingParameters<AppliedParams extends unknown[], ExpectedParams extends
   ...infer ATail,
 ]
   ? ExpectedParams extends [infer EHead, ...infer ETail]
-    ? Placeholder.Value extends AHead
+    ? AHead extends Placeholder.Value
       ? [EHead, ...RemainingParameters<ATail, ETail>]
       : RemainingParameters<ATail, ETail>
     : []
