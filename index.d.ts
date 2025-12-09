@@ -3,9 +3,9 @@ declare const enum Placeholder {
 }
 declare const __ = Placeholder.Value;
 /**
- * Whether the value passed is a placeholder.
+ * Whether the value passed is the curriable placeholder.
  */
-declare function isPlaceholder(value: any): value is Placeholder;
+declare function isPlaceholder<Value>(value: Value): Value extends Placeholder.Value ? true : false;
 
 type TupleOf<S extends number, V = undefined, A extends unknown[] = []> = S extends A['length']
   ? A
