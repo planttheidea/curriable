@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { __, curry, isPlaceholder, uncurry } from '../src/index.js';
+import { __, curry, uncurry } from '../src/index.js';
 
 describe('curry', () => {
   test('makes a function curriable', () => {
@@ -122,18 +122,6 @@ describe('curry', () => {
 
       expect(result).toEqual(['foo', 'bar', 'baz']);
     });
-  });
-});
-
-describe('isPlaceholder', () => {
-  test('returns true if the value is a placeholder', () => {
-    expect(isPlaceholder(__)).toBe(true);
-  });
-
-  test('returns false if the value is not a placeholder', () => {
-    const __ = 'something else';
-
-    expect(isPlaceholder(__)).toBe(false);
   });
 });
 
