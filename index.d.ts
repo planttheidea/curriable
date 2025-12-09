@@ -2,10 +2,6 @@ declare const enum Placeholder {
   Value = '<<\u200BCURRIABLE PLACEHOLDER\u200B>>',
 }
 declare const __ = Placeholder.Value;
-/**
- * Whether the value passed is the curriable placeholder.
- */
-declare function isPlaceholder<Value>(value: Value): Value extends Placeholder.Value ? true : false;
 
 type TupleOf<S extends number, V = undefined, A extends unknown[] = []> = S extends A['length']
   ? A
@@ -71,4 +67,4 @@ declare function uncurry<CurriedFn extends Curried<(...args: any[]) => any, (...
   curried: CurriedFn,
 ): CurriedFn['fn'];
 
-export { __, curry, isPlaceholder, uncurry };
+export { __, curry, uncurry };

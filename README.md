@@ -11,9 +11,10 @@ Curry any function with placeholder support
   - [API](#api)
     - [curry](#curry)
     - [uncurry](#uncurry)
-    - [Rest parameters](#rest-parameters)
-    - [Default parameters](#default-parameters)
-    - [Generics](#generics)
+      - [Using placeholders](#using-placeholders)
+      - [Rest parameters](#rest-parameters)
+      - [Default parameters](#default-parameters)
+      - [Generics](#generics)
   - [Benchmarks](#benchmarks)
     - [Passing each parameter in curried calls](#passing-each-parameter-in-curried-calls)
     - [Passing all parameters in one call](#passing-all-parameters-in-one-call)
@@ -183,28 +184,49 @@ All values provided are the number of operations per second (ops/sec) calculated
 [Benchmark suite](https://benchmarkjs.com/). The same function was curried and tested passing each parameter
 individually, passing all at once, and using placeholders.
 
-Benchmarks were performed on an i7 8-core Arch Linux laptop with 16GB of memory using NodeJS version `10.15.0`.
+Benchmarks were performed on an i9 16-core Arch Linux laptop with 64GB of memory using NodeJS version `24.8.0`.
 
 ### Passing each parameter in curried calls
 
-| Library       | Operations / second |
-| ------------- | ------------------- |
-| **curriable** | **4,052,206**       |
-| ramda         | 2,423,105           |
-| lodash        | 241,736             |
+```bash
+┌───────────┬────────────────┐
+│ Name      │ Ops / sec      │
+├───────────┼────────────────┤
+│ curriable │ 7124353.607986 │
+├───────────┼────────────────┤
+│ ramda     │ 4764809.934737 │
+├───────────┼────────────────┤
+│ lodash    │ 342433.581292  │
+└───────────┴────────────────┘
+Fastest was "curriable".
+```
 
 ### Passing all parameters in one call
 
-| Library       | Operations / second |
-| ------------- | ------------------- |
-| **curriable** | **18,106,685**      |
-| ramda         | 10,718,796          |
-| lodash        | 9,052,257           |
+```bash
+┌───────────┬─────────────────┐
+│ Name      │ Ops / sec       │
+├───────────┼─────────────────┤
+│ curriable │ 12350527.161373 │
+├───────────┼─────────────────┤
+│ ramda     │ 9607895.768301  │
+├───────────┼─────────────────┤
+│ lodash    │ 9153661.59519   │
+└───────────┴─────────────────┘
+Fastest was "curriable".
+```
 
 ### Using placeholder parameters in curried calls
 
-| Library       | Operations / second |
-| ------------- | ------------------- |
-| **curriable** | **4,821,329**       |
-| ramda         | 2,963,699           |
-| lodash        | 336,687             |
+```bash
+┌───────────┬────────────────┐
+│ Name      │ Ops / sec      │
+├───────────┼────────────────┤
+│ curriable │ 7889269.76134  │
+├───────────┼────────────────┤
+│ ramda     │ 5396093.483594 │
+├───────────┼────────────────┤
+│ lodash    │ 447202.272784  │
+└───────────┴────────────────┘
+Fastest was "curriable".
+```
