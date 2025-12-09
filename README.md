@@ -8,10 +8,9 @@ Curry any function with placeholder support
   - [Table of contents](#table-of-contents)
   - [Summary](#summary)
   - [Usage](#usage)
-    - [API](#api)
-      - [curry](#curry)
-      - [uncurry](#uncurry)
-      - [isPlaceholder](#isplaceholder)
+  - [API](#api)
+    - [curry](#curry)
+    - [uncurry](#uncurry)
     - [Rest parameters](#rest-parameters)
     - [Default parameters](#default-parameters)
     - [Generics](#generics)
@@ -41,22 +40,6 @@ If `fn` is the curried function and `_` is the placeholder value, the following 
 
 ## Usage
 
-You can use the default import:
-
-```ts
-import curry from 'curriable';
-
-const fn = curry((a, b, c) => [a, b, c]);
-
-console.log(fn('a', curry.__, 'c')('b')); // ["a", "b", "c"]
-
-const original = curry.uncurry(fn);
-
-console.log(original('a')); // ["a", undefined, undefined]
-```
-
-Or the named imports:
-
 ```ts
 import { __, curry, uncurry } from 'curriable';
 
@@ -69,9 +52,9 @@ const original = uncurry(fn);
 console.log(original('a')); // ["a", undefined, undefined]
 ```
 
-### API
+## API
 
-#### curry
+### curry
 
 Curry the `fn` provided for any combination of arguments passed, until all required arguments have been passed.
 
@@ -88,29 +71,44 @@ function curry<Fn extends (...args: any[]) => any>(
 parameters or use of rest parameters.
 [See the documentation on Function.length for more details](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/length).
 
-#### uncurry
+#### Using placeholders
+
+If you want to apply curried arguments out of order, you can use the placeholder when applying curried values.
 
 ```ts
-import { uncurry } from 'curriable';
+import { __, curry } from 'curriable';
 
-Get the underlying standard method that was curried using `curry`.
+const fn = curry((a, b, c) => [a, b, c]);
+const pendingB = fn('a', __, 'c');
 
-function uncurry<Fn extends (...args: any[]) => any>(
-    fn: Curried<Fn>
-) => Fn;
+console.log(pendingB('b')); // ["a", "b", "c"]
 ```
 
-#### isPlaceholder
+Please note that applying the placeholder will only "skip" the argument for that given call. For example, when applied
+as an individual argument, it still waits for the "next" argument:
 
 ```ts
-import { isPlaceholder } from 'curriable';
+import { __, curry } from 'curriable';
 
-Is the value passed a `curriable` placeholder.
+const fn = curry((a, b, c) => [a, b, c]);
+const pendingB = fn('a')(__)('c');
 
-function isPlaceholder(value: any): value is Placeholder
+console.log(pendingB('b')); // ["a", "c", "b"] <- order of actual arguments passed
 ```
 
-### Rest parameters
+However, you can apply them as preceeding arguments to any curried method, so this would work as expected:
+
+```ts
+import { __, curry } from 'curriable';
+
+const fn = curry((a, b, c) => [a, b, c]);
+const pendingBC = fn('a');
+const pendingB = pendingBC(__, 'c');
+
+console.log(pendingB('b')); // ["a", "b", "c"]
+```
+
+#### Rest parameters
 
 ```ts
 console.log((...args) => args.length); // 0 arity computed
@@ -125,7 +123,7 @@ const curried = curry(fn, 3);
 console.log(curried('a')('b')('c')); // ["a", "b", "c"]
 ```
 
-### Default parameters
+#### Default parameters
 
 ```ts
 console.log(function (a, b = 1, c) {}.length); // 1 arity computed
@@ -154,7 +152,7 @@ const curried = curry(fn);
 console.log(curried('a')('b', 5)); // ["a", "b", 5]
 ```
 
-### Generics
+#### Generics
 
 `curriable` will produce a new function that can extra the arguments and return value from the function passed, however
 a known gap in TS is that doing so will widen any types narrowed by the use of generics.
@@ -166,6 +164,18 @@ const foo = curried('foo')(true); // `foo` is `number|string` instead of just `s
 ```
 
 This is intrinsic to TS as a language, so unfortunately it cannot be avoided.
+
+### uncurry
+
+```ts
+import { uncurry } from 'curriable';
+
+Get the underlying standard method that was curried using `curry`.
+
+function uncurry<Fn extends (...args: any[]) => any>(
+    fn: Curried<Fn>
+) => Fn;
+```
 
 ## Benchmarks
 

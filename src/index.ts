@@ -1,7 +1,7 @@
 import type { Curried, CurriedFn, NormalizeFn } from './internalTypes.js';
 import { __ } from './placeholder.js';
 
-export { __, isPlaceholder } from './placeholder.js';
+export { __ };
 
 function createCurried<Fn extends (...args: any[]) => any, Arity extends number>(
   fn: Fn,
