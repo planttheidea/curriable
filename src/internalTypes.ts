@@ -4,11 +4,7 @@ type TupleOf<S extends number, V = undefined, A extends unknown[] = []> = S exte
   ? A
   : TupleOf<S, V, [...A, V]>;
 
-export type TupleLength<A extends unknown[]> = A extends unknown
-  ? number extends A['length']
-    ? never
-    : A['length']
-  : never;
+type TupleLength<A extends unknown[]> = A extends unknown ? (number extends A['length'] ? never : A['length']) : never;
 
 type DefaultableParams<Params extends unknown[], Arity extends number, Defaultable extends unknown[] = []> =
   Initial<Params, Arity> extends [infer H, ...infer T]
@@ -53,10 +49,11 @@ export type CurriedFn<Fn extends (...args: any[]) => any, Arity extends number> 
     >
   : ReturnType<Fn>;
 
-export type Curried<Fn extends (...args: any[]) => any, Arity extends number = TupleLength<Parameters<Fn>>> = CurriedFn<
-  Fn,
-  Arity
-> & {
+export type Curried<
+  Fn extends (...args: any[]) => any,
+  NormalizedFn extends (...args: any[]) => any,
+  Arity extends number = TupleLength<Parameters<Fn>>,
+> = CurriedFn<NormalizedFn, Arity> & {
   arity: Arity;
   fn: Fn;
 };

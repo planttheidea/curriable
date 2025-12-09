@@ -54,6 +54,9 @@ console.groupEnd();
 
 console.group('uncurried');
 
+const uncurriedRestFn = uncurry(curriedRestFn);
+
 console.log(uncurriedFn('foo', 'bar', 'baz'));
+console.log(uncurriedRestFn('foo', 'bar', 'baz'));
 
 console.groupEnd();

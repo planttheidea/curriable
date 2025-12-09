@@ -1,18 +1,14 @@
-import type { Curried, NormalizeFn } from './internalTypes.js';
+import type { Curried, CurriedFn, NormalizeFn } from './internalTypes.js';
 import { __ } from './placeholder.js';
 
 export { __, isPlaceholder } from './placeholder.js';
 
-/**
- * Get the method passed as a curriable method based on its parameters
- */
-export function curry<Fn extends (...args: any[]) => any, Arity extends number = Parameters<Fn>['length']>(
+function createCurried<Fn extends (...args: any[]) => any, Arity extends number>(
   fn: Fn,
-  arityOverride?: Arity,
-): number extends Arity ? never : Curried<NormalizeFn<Fn, Arity>, Arity> {
-  const arity = typeof arityOverride === 'number' ? arityOverride : fn.length;
-  const curried = (function (...initialArgs: any[]) {
-    return function (this: any, ...nextArgs: any[]) {
+  arity: Arity,
+): CurriedFn<Fn, Arity> {
+  const curried = function (...initialArgs: any[]) {
+    return function (this: any, ...nextArgs: any[]): any {
       const length: number = initialArgs.length;
       const newArgsLength = nextArgs.length;
 
@@ -47,14 +43,22 @@ export function curry<Fn extends (...args: any[]) => any, Arity extends number =
         }
       }
 
-      return remaining > 0
-        ? curried(
-            // @ts-expect-error - Allow passing `any[]` to avoid surfacing internal types.
-            combined,
-          )
-        : fn.apply(this, combined);
+      return remaining > 0 ? curried(combined) : fn.apply(this, combined);
     };
-  })([]) as Curried<Fn, Arity>;
+  };
+
+  return curried([]);
+}
+
+/**
+ * Get the method passed as a curriable method based on its parameters
+ */
+export function curry<Fn extends (...args: any[]) => any, Arity extends number = Parameters<Fn>['length']>(
+  fn: Fn,
+  arityOverride?: Arity,
+): number extends Arity ? never : Curried<Fn, NormalizeFn<Fn, Arity>, Arity> {
+  const arity = typeof arityOverride === 'number' ? arityOverride : fn.length;
+  const curried = createCurried(fn, arity as Arity) as any;
 
   curried.arity = arity as Arity;
   curried.fn = fn;
@@ -65,7 +69,7 @@ export function curry<Fn extends (...args: any[]) => any, Arity extends number =
 /**
  * Return a function that is the non-curried version of the fn passed.
  */
-export function uncurry<CurriedFn extends Curried<(...args: any[]) => any, number>>(
+export function uncurry<CurriedFn extends Curried<(...args: any[]) => any, (...args: any[]) => any, number>>(
   curried: CurriedFn,
 ): CurriedFn['fn'] {
   return curried.fn;
