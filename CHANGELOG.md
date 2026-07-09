@@ -1,5 +1,9 @@
 # curriable CHANGELOG
 
+## 2.0.1
+
+- [#69](https://github.com/planttheidea/curriable/pull/69) - Update build tools for better output typing
+
 ## 2.0.0
 
 ### Breaking changes
