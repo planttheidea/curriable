@@ -25,21 +25,25 @@ function createCurried<Fn extends (...args: any[]) => any, Arity extends number>
           combined[index] = value =
             initialArgs[index] === __ && newArgsIndex < newArgsLength ? nextArgs[newArgsIndex++] : initialArgs[index];
 
-          if (value !== __) {
+          // Only arguments that fill a slot within the arity count toward it.
+          if (value !== __ && index < arity) {
             --remaining;
           }
         }
       }
 
       if (newArgsIndex < newArgsLength) {
-        while (newArgsIndex < newArgsLength) {
-          combined[combined.length] = value = nextArgs[newArgsIndex];
+        let index = combined.length;
 
-          if (value !== __ && newArgsIndex < arity) {
+        while (newArgsIndex < newArgsLength) {
+          combined[index] = value = nextArgs[newArgsIndex++];
+
+          // Only arguments that fill a slot within the arity count toward it.
+          if (value !== __ && index < arity) {
             --remaining;
           }
 
-          ++newArgsIndex;
+          ++index;
         }
       }
 
