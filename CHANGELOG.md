@@ -1,5 +1,10 @@
 # curriable CHANGELOG
 
+## 2.0.2
+
+- [#77](https://github.com/planttheidea/curriable/issues/77) - Fix extra arguments beyond `arity` counting toward it,
+  which invoked the function early while placeholder slots remained
+
 ## 2.0.1
 
 - [#69](https://github.com/planttheidea/curriable/pull/69) - Update build tools for better output typing

@@ -107,6 +107,38 @@ describe('curry', () => {
     });
   });
 
+  describe('extra arguments beyond arity', () => {
+    test('does not count extra arguments toward arity when filling placeholders', () => {
+      const fn = (a: string, b: string, c = 'default'): string[] => [a, b, c];
+      const curried = curry(fn);
+
+      const partial = curried(__, 'b')(__, 'c');
+
+      expect(typeof partial).toBe('function');
+      expect(partial('a')).toEqual(['a', 'b', 'c']);
+    });
+
+    test('does not count extra arguments toward arity when appended after placeholders', () => {
+      const fn = (a: string, b: string, c: string, ...rest: string[]): string[] => [a, b, c, ...rest];
+      const curried = curry(fn, 3);
+
+      const partial = curried(__, 'b')(__, 'c', 'extra');
+
+      expect(typeof partial).toBe('function');
+      expect(partial('a')).toEqual(['a', 'b', 'c', 'extra']);
+    });
+
+    test('does not count extra arguments from a prior call toward arity', () => {
+      const fn = (a: string, b: string, c: string, ...rest: string[]): string[] => [a, b, c, ...rest];
+      const curried = curry(fn, 3);
+
+      const partial = curried(__, 'b', 'c', 'extra')(__);
+
+      expect(typeof partial).toBe('function');
+      expect(partial('a')).toEqual(['a', 'b', 'c', 'extra']);
+    });
+  });
+
   describe('rest arity', () => {
     const fn = (...args: any[]): any => [].slice.call(args);
     const restArity = curry(fn, 3);
